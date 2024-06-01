@@ -81,4 +81,14 @@ public class DriverService {
             driver.setAvailable(true);
         }
     }
+    public boolean isSiteInShipmentArea(Site site) {
+        if (this.sites != null) {
+            for (Site s : this.sites) {
+                if (s.getAddress().equals(site.getAddress())) {
+                    return true; // Site found
+                }
+            }
+        }
+        return false;
+    }
 }
