@@ -30,7 +30,17 @@ public class ShipmentArea {
             throw new IllegalStateException("The sites list has not been initialized.");
         }
     }
-
+    // Method to check if a site is in the ShipmentArea
+    public boolean isSiteInShipmentArea(Site site) {
+        if (this.sites != null) {
+            for (Site s : this.sites) {
+                if (s.getAddress().equals(site.getAddress())) {
+                    return true; // Site found
+                }
+            }
+        }
+        return false;
+    }
     // Method to remove a site from the list by name
     public boolean removeSite(String address) {
         if (this.sites != null) {

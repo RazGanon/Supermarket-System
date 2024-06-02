@@ -5,40 +5,44 @@ import java.util.ArrayList;
 
 public class DriverService {
     private ArrayList<Driver> drivers;
-    private Map<Driver, Transport> assignedDrivers;
+    private HashMap<Driver, Transport> assignedDrivers;
 
     public DriverService() {
         this.drivers = new ArrayList<>();
         this.assignedDrivers = new HashMap<>();
     }
 
-    public ArrayList<Driver> viewDrivers() {
+    public ArrayList<Driver> getAllDrivers() {
         return drivers;
     }
 
-    public String assignDriverToTransport(Driver driver, Transport transport) {
-        if (!drivers.contains(driver)) {
-            return "Driver not found.";
+//    public boolean assignDriverToTransport(Driver driver, Transport transport) {
+//        if (!drivers.contains(driver)) {
+//            return false;
+//        }
+//
+//        if (!driver.isAvailable()) {
+//            return false;
+//        }
+//
+//        // Additional logic to check if the driver has the appropriate license type for the transport
+//        if (!isLicenseValid(driver, transport)) {
+//            return false;
+//        }
+//
+//        assignedDrivers.put(driver, transport);
+//        driver.setAvailable(false);
+//        return true;
+//    }
+
+    public Driver getValidDriver(TransportRequest t_request) throws Exception {
+        for(Driver driver : drivers){
+            if (driver.isAvailable() && driver.getLicenseType().equals(t_request.getRequiredLicense())){
+                driver.setAvailable(false);
+                return driver;
+            }
         }
-
-        if (!driver.isAvailable()) {
-            return "Driver is not available.";
-        }
-
-        // Additional logic to check if the driver has the appropriate license type for the transport
-        if (!isLicenseValid(driver, transport)) {
-            return "Driver does not have the appropriate license.";
-        }
-
-        assignedDrivers.put(driver, transport);
-        driver.setAvailable(false);
-        return "Driver " + driver.getDriverName() + " assigned to transport.";
-    }
-
-    public boolean isLicenseValid(Driver driver, Transport transport) {
-        // Placeholder logic for checking if the driver's license is valid for the transport
-        // This can be expanded based on the actual requirements of the transport
-        return driver.getLicenseType().equals(transport.getRequiredLicenseType());
+        throw new Exception("No available driver");
     }
 
     public void addDriver(Driver driver) {
@@ -81,14 +85,5 @@ public class DriverService {
             driver.setAvailable(true);
         }
     }
-    public boolean isSiteInShipmentArea(Site site) {
-        if (this.sites != null) {
-            for (Site s : this.sites) {
-                if (s.getAddress().equals(site.getAddress())) {
-                    return true; // Site found
-                }
-            }
-        }
-        return false;
-    }
+
 }

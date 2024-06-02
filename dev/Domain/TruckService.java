@@ -51,7 +51,7 @@ public class TruckService {
     // Method to check availability of a truck
     public boolean isTruckAvailable(String licenseNumber) {
         Truck truck = getTruckByLicenseNumber(licenseNumber);
-        return truck != null && truck.getAvailable();
+        return truck != null && truck.isAvailable();
     }
 
     // Method to set a truck's availability
@@ -62,5 +62,15 @@ public class TruckService {
             return true;
         }
         return false;
+    }
+
+    public Truck getAvailableTruck() throws Exception {
+        for(Truck truck : trucks){
+            if (truck.isAvailable()){
+                truck.setAvailable(false);
+                return truck;
+            }
+        }
+        throw new Exception("No available truck");
     }
 }
