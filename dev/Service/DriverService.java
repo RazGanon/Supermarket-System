@@ -16,24 +16,7 @@ public class DriverService {
         return drivers;
     }
 
-//    public boolean assignDriverToTransport(Driver driver, Transport transport) {
-//        if (!drivers.contains(driver)) {
-//            return false;
-//        }
-//
-//        if (!driver.isAvailable()) {
-//            return false;
-//        }
-//
-//        // Additional logic to check if the driver has the appropriate license type for the transport
-//        if (!isLicenseValid(driver, transport)) {
-//            return false;
-//        }
-//
-//        assignedDrivers.put(driver, transport);
-//        driver.setAvailable(false);
-//        return true;
-//    }
+
 
     public Driver getValidDriver(TransportRequest t_request) throws Exception {
         for(Driver driver : drivers){

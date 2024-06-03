@@ -12,11 +12,11 @@ public class TransportService {
             Driver driver = d_service.getValidDriver(request);
             Truck truck = t_service.getAvailableTruck();
             TransportReport transportReport = new TransportReport(request.getTransportWeight());
-            Transport transport = new Transport(truck, driver, request.getOriginAddress(), transportReport, request.getRequestedTime(), request.getRequestDay());
+            Transport transport = new Transport(truck, driver, request.getOriginAddress(), transportReport, request.getRequestedTime(), request.getRequestDay(),request.getProduct_reports());
             transports.add(transport);
             return transport;
         } catch (Exception e) {
-            throw new Exception("Could not approve request");
+            return null;
         }
     }
     public boolean changTransportTruck(Truck truck,TruckService tService,Transport transport,String changes)throws Exception{
@@ -34,9 +34,22 @@ public class TransportService {
             return false;
         }
     }
-//    public boolean removeDestinations(ArrayList<Site> sites,String changes){
-//
-//    }
+    public void removeDestinations(ArrayList<Site> sites,String changes,TransportReport t_report,Transport transport){
+        for(Site site : sites){
+            transport.getH_map().remove(site);
+        }
+        t_report.addChangesMade(changes);
+   }
+   public void changeDestination(Site site_to_change,Transport transport,Site site_to_add){
+        ArrayList<Site> dest = transport.getDestinations();
+        for(Site s : dest){
+            if(s.equals(site_to_change)){
+                dest.remove(site_to_change);
+                dest.add(site_to_add);
+            }
+        }
+        transport.setDestinations(dest);
+   }
 
 
 }
