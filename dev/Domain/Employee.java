@@ -8,6 +8,7 @@ public class Employee {
     private int salary;
     private terms terms; // Terms of employment for the employee
     private SuperMarket SuperMarketBranch; //the super market branch where the emploee works
+    private Role role ;
 
     // constructors / standard setters / getters
     public Employee (String empfName, String emplName, String empId, int empSalary, terms empTerms, SuperMarket empSuperMarketBranch) {
@@ -17,6 +18,7 @@ public class Employee {
         salary=empSalary;
         terms=empTerms;
         SuperMarketBranch=empSuperMarketBranch;
+
     }
     public void setFname (String ifName){
         fName=ifName;
@@ -32,7 +34,13 @@ public class Employee {
     public String getFname () {return fName;}
     public String getLname () {return lName;}
     public int getSalary () {return salary;}
+    public Role getRole() {
+        return role;
+    }
 
+    public void setRole(Role role) {
+        this.role = role;
+    }
 
 }
 

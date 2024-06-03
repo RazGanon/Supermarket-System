@@ -19,16 +19,8 @@ public class Role {
         this.Role_Name=Role_Name;
     }
 
-/*
-    //Storekeeper class extending Role class
-    public class Storekeeper extends Role {
-        public Storekeeper(String roleName) {
-            super(roleName);
 
-        }
-    }
 
- */
 
 
 }

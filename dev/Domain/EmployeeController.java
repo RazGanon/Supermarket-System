@@ -37,4 +37,14 @@ public class EmployeeController {
             return true;
         }
     }
+
+    public Employee getEmployeeById(String id) {
+        if (!employeeMap.containsKey(id)) {
+            System.out.println("Employee with ID: " + id + " is not exists.");
+            return null; // if employee is not in the system
+        }
+        Employee Emp = employeeMap.get(id);
+        return Emp;
+    }
+
 }
