@@ -1,9 +1,4 @@
 package Domain;
-<<<<<<< HEAD
-
-public class Employee {
-}
-=======
 import java.util.Date;
 
 public class Employee {
@@ -43,4 +38,3 @@ public class Employee {
 
 
 
->>>>>>> origin/208398511_313322380
