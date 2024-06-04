@@ -6,7 +6,7 @@ import com.example.HelloWorld.Main;
 import java.util.*;
 import java.util.Map;
 public class ConstraintsController {
-    Map <String  , Constraints > map=new HashMap();
+    Map <String  , Constraints > Contrains_map=new HashMap();
 
 
 
@@ -99,7 +99,7 @@ public class ConstraintsController {
             }
         }
         Constraints constraints=new Constraints(matrix) ;
-        map.put(employeeId,constraints);
+        Contrains_map.put(employeeId,constraints);
 
 
 
@@ -109,12 +109,16 @@ public class ConstraintsController {
     //get matrix of contrains
     public Constraints  get_matrix (String id ){
 
-        return map.get(id);
+        return Contrains_map.get(id);
     }
     public Map getAllConstrains (){
-        return map;
+        return Contrains_map;
     }
+    public void printListEmpl(){
+        System.out.println("\nThe Map Contains constrains: \n\n" + Contrains_map);
 
+
+    }
 
     // Method to print a matrix
     public  void printMatrix(int[][] matrix) {
