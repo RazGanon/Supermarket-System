@@ -1,11 +1,14 @@
 package Domain;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 public class EmployeeController {
     // Create a map of employees
+    static int numberOfSuperMarket = 0 ;
     private Map<String, Employee> employeeMap = new HashMap<>();
+    private Map<String,SuperMarket > Supermarketsmap = new HashMap<>();
 
     // Method to register an employee
     public void registerEmployee(String fName, String lName, String Id, int Salary, terms Terms, SuperMarket superMarketBranch) {
@@ -46,5 +49,32 @@ public class EmployeeController {
         Employee Emp = employeeMap.get(id);
         return Emp;
     }
+    public terms setTerms(Date startdate,String jobtype, String wage,String daysoff) {
+        return new terms(startdate, jobtype, wage, daysoff);
+    }
+    public SuperMarket addsupermarket(String address,String ManagerName) {
+        SuperMarket newS = new SuperMarket(address, ManagerName);
+        Supermarketsmap.put(String.valueOf(numberOfSuperMarket), newS);
+        numberOfSuperMarket++;
+        return newS;
+    }
+    public boolean isManager(Employee e){
+        Role empR = e.getRole();
+        if (empR.get_Role_Name() == "Manager"){
+            return true;
+        }
+        else return false;
+    }
+    public void printListEmpl(){
+        System.out.println("\nThe Map Contains Following Elements: \n\n" + employeeMap);
 
-}
+
+            }
+
+
+
+
+
+    }
+
+

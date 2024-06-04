@@ -1,13 +1,18 @@
 package Domain;
 
+import Presentation.ConstraintsController;
+
 import java.util.List;
+import java.util.Map;
 
 public class Administrator {
     private EmployeeController employeeController;
+    private ConstraintsController cC;
 
     // Constructor
-    public Administrator(EmployeeController employeeController) {
+    public Administrator(EmployeeController employeeController, ConstraintsController CC) {
         this.employeeController = employeeController;
+        this.cC=CC;
     }
 
     // Method to manage employee roles
@@ -20,6 +25,17 @@ public class Administrator {
             System.out.println("Employee with ID " + employeeId + " not found.");
         }
     }
+
+//    public void buildWorkArrangment(){
+//        Map constraintsMap = cC.getAllConstrains();
+//        constraintsMap.forEach();
+//
+//
+
+
+//
+//
+//    }
 
 
 
