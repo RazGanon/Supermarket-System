@@ -1,10 +1,13 @@
 package Presentation;
+import Domain.Constraints;
 import Domain.Constraints.*;
+import com.example.HelloWorld.Main;
 
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
+import java.util.Map;
 public class ConstraintsController {
-    String id;
+    Map <String  , Constraints > map=new HashMap();
+
 
 
     //crate matrix of the shifts and day .
@@ -28,45 +31,40 @@ public class ConstraintsController {
 
         return matrix;
     }
+    //int [][] matrix = buildMatrix();
+    //Constraints constraints=new Constraints(matrix) ;
 
-    int[][] matrix_constraint = buildMatrix();
 
 
-    public ConstraintsController(String id, int[][] matrix_constraint) {
-
-        this.id = id;
-        this.matrix_constraint = matrix_constraint;
+    public ConstraintsController() {
 
     }
-    //defult constractor if the emplouee dont have constraint yet
-    public ConstraintsController(String id ) {
 
-        this.id = id;
-        this.matrix_constraint = buildMatrix();
 
-    }
-    public int[][] getMatrix_constraint ( ){
-        return this.matrix_constraint;
-    }
+
 
 
     //this method get row(day) and col (shift) and put the binary number 0 if cant work and 1 if can work
     public void addConstraint(String id,int row, int col, int binary) {
-        this.matrix_constraint[row][col] = binary;
-        this.id=id;
+
+
+
+
+
     }
 
+    //add constraint to employee with id for all the week
+
     public void getConstraintFromUser() {
+        int [][] matrix = buildMatrix();
+        //Constraints constraints=new Constraints(matrix) ;
+
+
         // Ask the user to input the ID
         System.out.print("Enter the employee ID: ");
         Scanner scanner = new Scanner(System.in);
         String employeeId = scanner.nextLine(); // Read the input as a string
-        //this is for sunday
-        System.out.print("for Sunday if you can work morning and evening press 11" +
-                "if you cant work press 00 " +
-                "if you can work only morning press 10 "
-                 + " if you can work only evening pres 01");
-        String userInput_sunday = scanner.nextLine();
+
         for (int day = 0; day < 6; day++) {
             System.out.println("For day " + (day + 1) + ":");
             System.out.print("Enter your availability (11 for both morning and evening, 10 for only morning, 01 for only evening, 00 for none): ");
@@ -76,68 +74,47 @@ public class ConstraintsController {
             if (userInput.equals("11")) {
                 //System.out.println("You can work both morning and evening on day " + (day + 1));
                 // Add constraints for both morning and evening shifts
-                this.addConstraint(id,day,0,1);
-                this.addConstraint(id,day,1,1);
+                matrix[0][day]=1;
+                matrix[1][day]=1;
+                //this.addConstraint(employeeId,0,day,1);
+                //this.addConstraint(employeeId,1,day,1);
 
-            }  if (userInput.equals("10")) {
+
+            }   if (userInput.equals("10")) {
                 //System.out.println("You can work only morning on day " + (day + 1));
 
                 // Add constraints for only morning shift
-                this.addConstraint(id,day,0,1);
+                matrix[0][day]=1;
+                //this.addConstraint(employeeId,0,day,1);
             }  if (userInput.equals("01")) {
                 //System.out.println("You can work only evening on day " + (day + 1));
                 // Add constraints for only evening shift
-                this.addConstraint(id,day,1,1);
-            }  if (userInput.equals("00")) {
-                //System.out.println("You can't work on day " + (day + 1));
-                // No constraints needed
-            } else {
+                matrix[1][day]=1;
+                //this.addConstraint(employeeId ,1,day,1);
+            }
+            if (!(userInput.equals("01") || userInput.equals("10") ||userInput.equals("11") ||userInput.equals("00"))) {
                 System.out.println("Invalid input. Please try again.");
                 day--; // Repeat the loop for the same day
-            }
-        }// Read the input as a string
-        /*
-        if (Objects.equals(userInput_sunday, "11"))
-        {
-            this.addConstraint(employeeId ,0,0,1);
-            this.addConstraint(employeeId,0,1,1);
-        }
-        else if (Objects.equals(userInput_sunday, "10"))
-        {
-            this.addConstraint(employeeId ,0,0,1);
-        }
-        else if (Objects.equals(userInput_sunday, "01"))
-        {
-            this.addConstraint(employeeId, 0,1,1);
-        }
 
-        //for monday
-        System.out.print("for Sunday if you can work morning and evening press 11" +
-                "if you cant work press 00 " +
-                "if you can work only morning press 10 "
-                + " if you can work only evening pres 01");
-        String userInputaymondy = scanner.nextLine(); // Read the input as a string
-        if (Objects.equals(userInputaymondy, "11"))
-        {
-            this.addConstraint(employeeId ,0,1,1);
-            this.addConstraint(employeeId,1,1,1);
+            }
         }
-        else if (Objects.equals(userInputaymondy, "10"))
-        {
-            this.addConstraint(employeeId ,0,1,1);
-        }
-        else if (Objects.equals(userInputaymondy, "01"))
-        {
-            this.addConstraint(employeeId, 1,1,1);
-        }
-        /
-         */
+        Constraints constraints=new Constraints(matrix) ;
+        map.put(employeeId,constraints);
 
 
 
 
 
     }
+    //get matrix of contrains
+    public Constraints  get_matrix (String id ){
+
+        return map.get(id);
+    }
+    public Map getAllConstrains (){
+        return map;
+    }
+
 
     // Method to print a matrix
     public  void printMatrix(int[][] matrix) {

@@ -1,6 +1,6 @@
 package Domain;
 import java.util.ArrayList;
-
+import Presentation.ConstraintsController;
 
 
 public class Constraints
@@ -10,7 +10,6 @@ public class Constraints
     public  Constraints (int [][] constraintsMatrix){
         this.ConstraintsMatrix = constraintsMatrix;
     }
-
 
 
 

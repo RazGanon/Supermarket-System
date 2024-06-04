@@ -8,11 +8,10 @@ public class Main {
         // to see how IntelliJ IDEA suggests fixing it.
         //System.out.printf("Hello World!");
 
-        ConstraintsController m = new ConstraintsController("123");
-        int [][]ma =m.getMatrix_constraint();
-        m.printMatrix(m.getMatrix_constraint());
+        ConstraintsController m = new ConstraintsController();
         m.getConstraintFromUser();
-        m.printMatrix(m.getMatrix_constraint());
+
+
 
 
 
