@@ -33,4 +33,14 @@ public class Shift {
     public boolean isEmployeeAvailable(String employeeId) {
         return available_employees.contains(employeeId);
     }
+
+    @Override
+    public String toString() {
+        return "Shift{" +
+                "branch=" + branch +
+                ", type=" + type +
+                ", day=" + day +
+                ", availableEmployees=" + available_employees +
+                '}';
+    }
 }
