@@ -1,0 +1,29 @@
+package Domain;
+
+import java.sql.Timestamp;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+public class Shift {
+    private  SuperMarket branch;
+    private List<String> available_employees;
+    private Map<Role, List<String>> employees;
+    private List<Integer> manager_constraints;
+    private boolean confirmed;
+    private  ShiftType type; //morning\evening
+    private  DayShift day ;
+    public Shift(SuperMarket branch, ShiftType type,DayShift day) {
+        available_employees = new LinkedList<>();
+        employees = new HashMap<>();
+        this.type = type;
+        confirmed = false;
+        this.branch = branch;
+        manager_constraints = new LinkedList<>();
+        this.day=day;
+    }
