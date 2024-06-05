@@ -19,6 +19,7 @@ public class Main {
     private static ConstraintsService constraintManagement = new ConstraintsService();
     private static ScheduleService scheduleService;
     private static WorkArrangementService workarrManagement;
+    private static String user_id;
 
     public static void main(String[] args) {
         try {
@@ -35,6 +36,7 @@ public class Main {
         while (true) {
             System.out.println("Enter username: ");
             String username = scanner.nextLine();
+            user_id=username;
             System.out.println("Enter password: ");
             String password = scanner.nextLine();
 
@@ -44,7 +46,7 @@ public class Main {
                 System.out.println("Invalid username Please try again.");
                 continue;
             }
-            if (!employeeToCheck.equals(password)){
+            if (!employeeToCheck.getPassword().equals(password)){
                 System.out.println("Invalid password Please try again.");
             continue;
         }
@@ -108,7 +110,7 @@ public class Main {
 
             switch (choice) {
                 case 1:
-                    // Add functionality to make constraints for the next schedule
+                    constraintManagement.getConstraintFromUser();
                     break;
                 case 2:
                     // Add functionality to send request for change constraints

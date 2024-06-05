@@ -27,6 +27,8 @@ public class csvReader {
                     section = "Emp";
                     continue;
                 }
+                if (line.equalsIgnoreCase("")){
+                section = "end";}
 
                 String[] values = line.split(","); // Splits the line into an array of values based on commas
                 switch (section) {
@@ -37,7 +39,7 @@ public class csvReader {
                         String lname = values[2];
                         int salary = Integer.parseInt(values[3]);
                         LocalDate startDate = LocalDate.parse(values[4]);
-                        String jobType = values[5];
+                        String role = values[5];
                         String wage = values[6];
                         String daysOff = values[7];
                         String locationOfSuper = values[8];
@@ -45,21 +47,18 @@ public class csvReader {
                         String password = values[10];
 
                         // Create necessary objects
-                        terms t = new terms(startDate, jobType, wage, daysOff);
+                        terms t = new terms(startDate, role , wage, daysOff);
                         SuperMarket superMarket = new SuperMarket(locationOfSuper, managerFullName);
+                        Role r = Role.valueOf(role);
 
                         // Create an employee and add to the list
-                        Employee employee = new Employee(id, fname, lname, salary, t, superMarket);
-                        employee.setPassword(password);
+                        Employee employee;
+                        employee = employeeService.registerEmployeeAuto(fname, lname, id, salary, t, superMarket,password,r);
+                        //employee.setPassword(password);
 
                         employees.add(employee);
                         break;
                 }
-            }
-
-            // Register employees in EmployeeService
-            for (Employee employee : employees) {
-                employeeService.registerEmployee(employee.getFname(), employee.getLname(), employee.getId(), employee.getSalary(), employee.getTerms(), employee.getSuperMarketBranch());
             }
 
         } catch (IOException e) {
