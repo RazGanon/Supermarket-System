@@ -6,7 +6,19 @@ import com.example.HelloWorld.Main;
 import java.util.*;
 import java.util.Map;
 public class ConstraintsController {
-    Map <String  , Constraints > Contrains_map=new HashMap();
+    Map <String  , Constraints > Contrains_map=new HashMap<>();
+    Set<String> EmployeeForShifts_1_morning = new  HashSet<>() ;
+    Set<String> EmployeeForShifts_1_evening = new  HashSet<>() ;
+    Set<String> EmployeeForShifts_2_morning = new  HashSet<>() ;
+    Set<String> EmployeeForShifts_2_evening = new  HashSet<>() ;
+    Set<String> EmployeeForShifts_3_morning  = new  HashSet<>() ;
+    Set<String> EmployeeForShifts_3_evening = new  HashSet<>() ;
+    Set<String> EmployeeForShifts_4_morning = new  HashSet<>() ;
+    Set<String> EmployeeForShifts_4_evening = new  HashSet<>() ;
+    Set<String> EmployeeForShifts_5_morning  = new  HashSet<>() ;
+    Set<String> EmployeeForShifts_5_evening = new  HashSet<>() ;
+    Set<String> EmployeeForShifts_6_morning  = new  HashSet<>() ;
+    Set<String> EmployeeForShifts_6_evening = new  HashSet<>() ;
 
 
 
@@ -53,9 +65,10 @@ public class ConstraintsController {
 
     }
 
+
     //add constraint to employee with id for all the week
 
-    public void getConstraintFromUser() {
+    public Constraints getConstraintFromUser() {
         int [][] matrix = buildMatrix();
         //Constraints constraints=new Constraints(matrix) ;
 
@@ -76,20 +89,93 @@ public class ConstraintsController {
                 // Add constraints for both morning and evening shifts
                 matrix[0][day]=1;
                 matrix[1][day]=1;
+                if(day==0){
+                    EmployeeForShifts_1_morning.add(employeeId);
+                    EmployeeForShifts_1_evening.add(employeeId);
+                }
+                if(day==1){
+                    EmployeeForShifts_2_morning.add(employeeId);
+                    EmployeeForShifts_2_evening.add(employeeId);
+                }
+                if(day==2){
+                    EmployeeForShifts_3_morning.add(employeeId);
+                    EmployeeForShifts_3_evening.add(employeeId);
+                }
+                if(day==3){
+                    EmployeeForShifts_4_morning.add(employeeId);
+                    EmployeeForShifts_4_evening.add(employeeId);
+                }
+                if(day==4){
+                    EmployeeForShifts_5_morning.add(employeeId);
+                    EmployeeForShifts_5_evening.add(employeeId);
+                }
+                if(day==5){
+                    EmployeeForShifts_6_morning.add(employeeId);
+                    EmployeeForShifts_6_evening.add(employeeId);
+                }
+
+                //EmployeeForShifts.add(employeeId);//set of shift in day 1 shift mornning
                 //this.addConstraint(employeeId,0,day,1);
                 //this.addConstraint(employeeId,1,day,1);
 
-
             }   if (userInput.equals("10")) {
                 //System.out.println("You can work only morning on day " + (day + 1));
-
                 // Add constraints for only morning shift
                 matrix[0][day]=1;
+                if(day==0){
+                    EmployeeForShifts_1_morning.add(employeeId);
+
+                }
+                if(day==1){
+                    EmployeeForShifts_2_morning.add(employeeId);
+
+                }
+                if(day==2){
+                    EmployeeForShifts_3_morning.add(employeeId);
+
+                }
+                if(day==3){
+                    EmployeeForShifts_4_morning.add(employeeId);
+
+                }
+                if(day==4){
+                    EmployeeForShifts_5_morning.add(employeeId);
+
+                }
+                if(day==5){
+                    EmployeeForShifts_6_morning.add(employeeId);
+
+                }
+
                 //this.addConstraint(employeeId,0,day,1);
             }  if (userInput.equals("01")) {
                 //System.out.println("You can work only evening on day " + (day + 1));
                 // Add constraints for only evening shift
                 matrix[1][day]=1;
+                if(day==0){
+                    EmployeeForShifts_1_evening.add(employeeId);
+
+                }
+                if(day==1){
+                    EmployeeForShifts_2_evening.add(employeeId);
+
+                }
+                if(day==2){
+                    EmployeeForShifts_3_evening.add(employeeId);
+
+                }
+                if(day==3){
+                    EmployeeForShifts_4_evening.add(employeeId);
+
+                }
+                if(day==4){
+                    EmployeeForShifts_5_evening.add(employeeId);
+
+                }
+                if(day==5){
+                    EmployeeForShifts_6_evening.add(employeeId);
+
+                }
                 //this.addConstraint(employeeId ,1,day,1);
             }
             if (!(userInput.equals("01") || userInput.equals("10") ||userInput.equals("11") ||userInput.equals("00"))) {
@@ -100,11 +186,19 @@ public class ConstraintsController {
         }
         Constraints constraints=new Constraints(matrix) ;
         Contrains_map.put(employeeId,constraints);
+        return getMatrixFromID(employeeId);
 
 
 
 
 
+
+
+
+
+    }
+    public Constraints getMatrixFromID (String id ){
+        return Contrains_map.get(id);
     }
     //get matrix of contrains
     public Constraints  get_matrix (String id ){
