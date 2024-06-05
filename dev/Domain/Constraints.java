@@ -3,6 +3,7 @@ package Domain;
 
 public class Constraints
 
+
 {
     private int[][] ConstraintsMatrix ;
     //constructor

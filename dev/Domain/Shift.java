@@ -37,7 +37,7 @@ public class Shift {
     @Override
     public String toString() {
         return "Shift{" +
-                "branch=" + branch +
+                " Supermarket branch=" + branch +
                 ", type=" + type +
                 ", day=" + day +
                 ", availableEmployees=" + available_employees +

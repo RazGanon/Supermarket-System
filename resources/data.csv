@@ -1,0 +1,30 @@
+{
+  "Employees": [
+    {
+      "id": "313322380",
+      "firstName": "mor",
+      "lastName": "barzilay",
+      "salary": 10000,
+      "startDate": "2023-06-05",
+      "jobType": "manager",
+      "wage": "full",
+      "daysOff": "13",
+      "locationOfSuper": "tel-aviv",
+      "managerFullName": "mor Barzilay",
+      "password": "2603"
+    },
+    {
+      "id": "208398511",
+      "firstName": "niv",
+      "lastName": "sampson",
+      "salary": 5000,
+      "startDate": "2023-06-05",
+      "jobType": "worker",
+      "wage": "full",
+      "daysOff": "13",
+      "locationOfSuper": "tel-aviv",
+      "managerFullName": "mor Barzilay",
+      "password": "2603"
+    }
+  ]
+}
