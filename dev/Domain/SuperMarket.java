@@ -8,7 +8,12 @@ public class SuperMarket {
     public SuperMarket (String address, String ManagerName ) {
         this.address= address;
         this.ManagerName = ManagerName;
-
-
+    }
+    @Override
+    public String toString() {
+        return "Super Market Address : " +
+                address+
+                ", The Manager Of This Branch " + ManagerName +
+                '}';
     }
 }
