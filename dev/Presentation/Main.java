@@ -105,7 +105,7 @@ public class Main {
             selectedRole = roleList.get(choice1 - 1);
             System.out.println("You have selected: " + selectedRole);
         } else {
-            System.out.println("Invalid choice. Please run the program again and choose a valid number.");
+            System.out.println("Invalid choice.  Please run the program again and choose a valid number.");
         }
 
         employeeManagement.changeEmpRole(e,selectedRole);
