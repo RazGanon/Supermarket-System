@@ -1,0 +1,48 @@
+Areas:
+Area1
+Area2
+Area3
+Area4
+Sites:
+123 Main St,555-1234,John Doe,ProductA,1,10.5,ProductB,2,20.0,Area1
+456 Elm St,555-5678,Jane Smith,ProductC,3,15.0,ProductD,4,25.0,Area1
+789 Oak St,555-9012,Bob Johnson,ProductE,5,30.0,Area1
+123 Origin St,555-3434,Omer Topg,ProductF,8,15.0,ProductG,9,25.0,Area1
+654 Pine St,555-3456,Chris Green,ProductJ,12,20.0,ProductK,13,18.5,Area2
+321 Maple Ave,555-4567,Lisa Blue,ProductL,14,22.5,ProductM,15,10.0,Area2
+852 Forest Ln,555-7890,Tom Black,ProductN,16,25.0,ProductO,17,30.0,Area2
+951 Beach Blvd,555-1235,Alice Brown,ProductP,18,10.0,ProductQ,19,20.0,Area3
+753 Hill St,555-2345,Michael Gray,ProductR,20,15.0,ProductS,21,25.0,Area3
+159 Ocean Dr,555-3457,Olivia Yellow,ProductT,22,5.0,ProductU,23,7.5,Area3
+357 Park Pl,555-4568,Henry Purple,ProductV,24,8.5,ProductW,25,6.0,Area3
+258 Lake Rd,555-5678,Nora Red,ProductX,26,12.0,ProductY,27,9.0,Area4
+147 Sunset Ave,555-6789,Sam Orange,ProductZ,28,3.5,ProductAA,29,4.0,Area4
+369 Vine St,555-7891,Lara Green,ProductBB,30,7.0,ProductCC,31,5.5,Area4
+Trucks:
+ABC123,B,ModelX,2000,5000,true
+DEF456,C,ModelY,2500,6000,true
+GHI789,D,ModelZ,3000,7000,false
+JKL012,E,ModelA,3500,8000,true
+MNO345,A,ModelB,1500,4000,true
+PQR678,B,ModelC,2000,4500,true
+STU901,C,ModelD,2500,5000,true
+VWX234,D,ModelE,3000,5500,false
+YZA567,E,ModelF,3500,6000,true
+BCD890,A,ModelG,1500,3500,true
+EFG123,B,ModelH,2000,4000,true
+HIJ456,C,ModelI,2500,4500,true
+KLM789,D,ModelJ,3000,5000,false
+NOP012,E,ModelK,3500,5500,true
+Drivers:
+C,Mor,true,1
+B,Raziel,true,2
+C,Sampson,true,3
+D,Shon ha melech,true,4
+E,Jesie,true,5
+A,Yossi,true,6
+B,Niv,true,7
+C,John,true,8
+D,Shani,true,9
+E,Sharon,true,10
+A,Daniel,true,11
+B,Robert,true,12
