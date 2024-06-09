@@ -29,20 +29,17 @@ public class ShipmentAreaController {
         return instance;
     }
 
-    public String addSiteToArea(String json, String areaName) {
-        Site site = gson.fromJson(json, Site.class);
-        shipmentAreaService.addSiteToArea(areaName, site);
-        return "Site added successfully to area " + areaName + ".";
-    }
-
-    public String removeSiteFromArea(String address, String areaName) {
+    public String addSiteToArea(String areaName, String siteJson) {
         try {
-            boolean removed = shipmentAreaService.removeSiteFromArea(address, areaName);
-            return removed ? "Site removed successfully from area " + areaName + "." : "Site not found in area " + areaName + ".";
-        } catch (SiteNotInArea e) {
-            return e.getMessage();
+            Site site = gson.fromJson(siteJson, Site.class);
+            shipmentAreaService.addSiteToArea(areaName, site);
+            return "Site added successfully.";
+        } catch (Exception e) {
+            return "Error adding site: " + e.getMessage();
         }
     }
+
+
 
     public String isSiteInShipmentArea(String address, String areaName) {
         boolean exists = shipmentAreaService.isSiteInShipmentArea(address, areaName);
@@ -54,8 +51,12 @@ public class ShipmentAreaController {
         return gson.toJson(areas);
     }
 
-//    public String getAllShipmentAreas() {
-//        ArrayList<ShipmentArea> shipmentAreas = shipmentAreaService.getShipmentAreas();
-//        return gson.toJson(shipmentAreas);
-//    }
+    public String removeSiteFromArea(String areaName, String address) {
+        try {
+            boolean removed = shipmentAreaService.removeSiteFromArea(address, areaName);
+            return removed ? "Site removed successfully from area " + areaName : "Site not found in area " + areaName;
+        } catch (SiteNotInArea e) {
+            return e.getMessage();
+        }
+    }
 }

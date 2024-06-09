@@ -80,6 +80,12 @@ public class Main {
                     getProductReportBySite(scanner);
                     break;
                 case 18:
+                    addSiteToShipmentArea(scanner);
+                    break;
+                case 19:
+                    removeSiteFromShipmentArea(scanner);
+                    break;
+                case 20:
                     System.out.println("Exiting...");
                     return;
                 default:
@@ -98,7 +104,7 @@ public class Main {
         System.out.println("6. List All Trucks");
         System.out.println("7. Add Truck");
         System.out.println("8. Remove Truck");
-        System.out.println("9. Update Driver Availability");
+        System.out.println("9. Update Truck Availability");
         System.out.println("10. List All Products Reports");
         System.out.println("11. List All Transports");
         System.out.println("12. Change Transport Truck");
@@ -106,8 +112,10 @@ public class Main {
         System.out.println("14. Change Destination");
         System.out.println("15. Get Products Report By Id");
         System.out.println("16. Get Transport Report By Id");
-        System.out.println("17. Get Product Report Site");
-        System.out.println("18. Exit");
+        System.out.println("17. Get Product Report By Site");
+        System.out.println("18. Add Site To Selected Shipment Area");
+        System.out.println("19. Remove Site From Selected Shipment Area");
+        System.out.println("20. Exit");
         System.out.print("Enter your choice: ");
     }
 
@@ -189,7 +197,25 @@ public class Main {
             System.out.println("No Driver Matching The ID Given");
         }
     }
+    public static void addSiteToShipmentArea(Scanner scanner) {
+        try {
+            System.out.print("Enter Area Name: ");
+            String areaName = scanner.nextLine();
+            System.out.print("Enter Site Address: ");
+            String address = scanner.nextLine();
+            System.out.print("Enter Contact Number: ");
+            String contactNumber = scanner.nextLine();
+            System.out.print("Enter Contact Name: ");
+            String contactName = scanner.nextLine();
+            Site newSite = new Site(address, contactName, contactNumber);
+            String newSiteGson = gson.toJson(newSite);
 
+            String response = shipmentAreaController.addSiteToArea(areaName, newSiteGson);
+            System.out.println(response);
+        } catch (Exception e) {
+            System.out.println("Error adding site: " + e.getMessage());
+        }
+    }
     public static void updateDriverAvailability(Scanner scanner) {
         System.out.print("Enter Driver ID: ");
         long driverId = scanner.nextLong();
@@ -283,6 +309,7 @@ public class Main {
             String transportGson = transportController.getTransportById(transportId);
             Transport transport = gson.fromJson(transportGson,Transport.class);
             String result = transportController.changeTransportTruck(transport.getTransportId(), changes);
+
             System.out.println(result);
         } catch (Exception e) {
             System.out.println("Error changing transport truck: " + e.getMessage());
@@ -334,11 +361,12 @@ public class Main {
             String oldSiteName = scanner.nextLine();
             System.out.print("Enter new Site Name: ");
             String newSiteName = scanner.nextLine();
-            Transport transport = transportController.getTransportService().getTransportById(transportId);
-            System.out.print(transport.getDestinations().get(0).getAddress());
-            System.out.println(transportId);
+            System.out.print("Enter Product Report ID For The New Site: ");
+            int productReportId = scanner.nextInt();
+            scanner.nextLine();
             // Get all sites in the area
             String areas = shipmentAreaController.getAllAreas();
+            ProductsReport newProductsReport = gson.fromJson(reportController.getProductsReportById(productReportId), ProductsReport.class);
             Type listType = new TypeToken<ArrayList<ShipmentArea>>() {}.getType();
             ArrayList<ShipmentArea> shipmentAreas = gson.fromJson(areas, listType);
 
@@ -355,7 +383,8 @@ public class Main {
             }
             String oldSiteGson = gson.toJson(oldSite);
             String newSiteGson = gson.toJson(newSite);
-            transportController.changeDestination(transportId,oldSiteGson,newSiteGson);
+            String productsReport = reportController.getProductsReportById(productReportId);
+            transportController.changeDestination(transportId,oldSiteGson,newSiteGson,productsReport);
             System.out.println("Destination changed successfully.");
         } catch (Exception e) {
             System.out.println("Error changing destination: " + e.getMessage());
@@ -396,7 +425,7 @@ public class Main {
         }
     }
     public static void getProductReportBySite(Scanner scanner){
-        System.out.print("Enter Site Address:");
+        System.out.print("Enter Site Address: ");
         String siteName = scanner.nextLine();
         String sitesAndProducts = reportController.getAllSiteProductsReports();
         Type listType = new TypeToken<ArrayList<SiteProductsReport>>() {}.getType();
@@ -407,5 +436,14 @@ public class Main {
             }
         }
     }
+    public static void removeSiteFromShipmentArea(Scanner scanner) {
+        System.out.print("Enter Area Name: ");
+        String areaName = scanner.nextLine();
+        System.out.print("Enter Site Address: ");
+        String address = scanner.nextLine();
+        String response = shipmentAreaController.removeSiteFromArea(areaName, address);
+        System.out.println(response);
+    }
+
 
 }

@@ -1,13 +1,10 @@
 package Tests;
-
 import Domain.*;
 import Presentation.*;
-import Service.*;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.junit.Before;
 import org.junit.Test;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -47,13 +44,18 @@ public class NewMainTest {
         String input = "E\nYair Tesla\ntrue\n3183342456\n";
         InputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(out));
+
         main.addDriver(new Scanner(System.in));
         Driver driver = gson.fromJson(driverController.getDriverById(3183342456L), Driver.class);
         assertNotNull(driver);
         assertEquals("Yair Tesla", driver.getDriverName());
+        assertTrue(out.toString().contains("Driver added successfully."));
 
         // Simulate listing all drivers
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        out = new ByteArrayOutputStream();
         System.setOut(new PrintStream(out));
         main.listAllDrivers();
         String allDriversJson = driverController.getAllDrivers();
@@ -111,7 +113,7 @@ public class NewMainTest {
         assertEquals("Truck change", updatedTransport.getTsp().getChangesMade());
 
         // Simulate changing the destination for an existing transport
-        input = transportId + "\n123 Main St\n789 Oak St\n";
+        input = transportId + "\n123 Main St\n789 Oak St\n2\n";
         in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
         main.changeDestination(new Scanner(System.in));
@@ -154,15 +156,15 @@ public class NewMainTest {
         System.setIn(in);
         main.getProductsReportById(new Scanner(System.in));
         ProductsReport report = gson.fromJson(reportController.getProductsReportById(1), ProductsReport.class);
-        assertNotNull(report);
+        assertEquals(report.toString(),"ProductsReport ID: 1\nProducts: ProductA (ID: 1, Weight: 10.5), ProductB (ID: 2, Weight: 20.0)\nWeight: 30.5\n");
 
         // Simulate getting a transport report by ID
-        input = "1\n";
+        input = "15\n";
         in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
         main.getTransportReportById(new Scanner(System.in));
-        TransportReport transportReport = gson.fromJson(reportController.getTransportReportById(1), TransportReport.class);
-        //assertNotNull(transportReport);
+        TransportReport transportReport = gson.fromJson(reportController.getTransportReportById(15), TransportReport.class);
+        assertEquals(transportReport.toString(),"TransportReport ID: 15,Initial Weight: " + transportReport.getInitialWeight() + ",Changes Made: " + transportReport.getChangesMade());
 
         // Simulate removing a driver
         input = "1\n";

@@ -42,7 +42,7 @@ public class TruckService {
         return truck != null && truck.isAvailable();
     }
     public boolean isTrackValid(Truck truck,double weight){
-        return truck.getMaxWeight() <= weight;
+        return !(truck.getNetWeight() + weight > truck.getMaxWeight());
     }
 
 

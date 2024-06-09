@@ -54,7 +54,7 @@ public class TransportService {
         }
         if (!d_service.isValidLicense(licenseToWeight(weight), requestedDriver.getLicenseType()) ) {
             throw new InvalidDriverException("Driver license cannot fit the transport weight");
-        } else if (requestedTruck.getMaxWeight() < weight) {
+        } else if (!t_service.isTrackValid(requestedTruck,weight)) {
             throw new TruckCantHandleWeight("Truck can't handle transport weight");
         } else {
             // Check if all destination addresses are in the same area

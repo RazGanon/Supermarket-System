@@ -27,18 +27,18 @@ public class ShipmentAreaService {
     }
 
     public void addSiteToArea(String areaName, Site site) {
+        ShipmentArea targetArea = null;
         for (ShipmentArea shipmentArea : shipmentAreas) {
             if (shipmentArea.getAreaName().equals(areaName)) {
-                shipmentArea.addSite(site);
-                return;
-            }else {
-                ShipmentArea newShipmentArea = new ShipmentArea(new ArrayList<>(), areaName);
-                newShipmentArea.addSite(site);
-                shipmentAreas.add(newShipmentArea);
+                targetArea = shipmentArea;
+                break;
             }
         }
 
 
+        targetArea = new ShipmentArea(new ArrayList<>(), areaName);
+        shipmentAreas.add(targetArea);
+        targetArea.addSite(site);
     }
 
     public boolean removeSiteFromArea(String address, String areaName) throws SiteNotInArea {

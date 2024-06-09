@@ -29,6 +29,6 @@ public class TransportReport extends Report {
         return changesMade;
     }
     public String toString() {
-        return super.toString() + ", Initial Weight: " + initialWeight + ", Changes Made: " + changesMade;
+        return  "TransportReport ID: " +getReportId() + ",Initial Weight: " + initialWeight + ",Changes Made: " + changesMade;
     }
 }
