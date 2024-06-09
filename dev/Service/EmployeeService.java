@@ -2,6 +2,7 @@ package Service;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import Domain.Employee;
 import Domain.Role;
@@ -93,6 +94,9 @@ public class EmployeeService {
     public boolean isManager(Employee e) {
         Role empR = e.getRole();
         return empR == Role.Manager;
+    }
+    public void changeEmpRole(Employee e,Role r){
+        e.setRole(r);
     }
 
     public void printListEmpl() {

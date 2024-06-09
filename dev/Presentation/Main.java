@@ -1,6 +1,7 @@
 package Presentation;
 
 import Domain.Employee;
+import Domain.Role;
 import Domain.SuperMarket;
 import Service.*;
 
@@ -8,7 +9,10 @@ import com.google.gson.Gson;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.EnumSet;
+import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import static Presentation.csvReader.initializeData;
 
@@ -64,6 +68,52 @@ public class Main {
         String currentSchedule = scheduleService.getCurrentSchedule();
         System.out.println(currentSchedule);
     }
+    public static void PrintListOfEmplByBranch(){
+
+
+    }
+    public static void ChangeEmpRole(){
+        Role selectedRole = null;
+        //requst emp id
+        //use user input
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("add employee id");
+        String idchoice = String.valueOf(scanner.nextInt());
+        //find this emp by his id :
+        Employee e =employeeManagement.getEmployeeById(idchoice);
+
+
+        //ask user to choose the new role for emp
+            // Get all roles in the Role enum
+        EnumSet<Role> allRoles = EnumSet.allOf(Role.class);
+            // Convert EnumSet to List
+        List<Role> roleList = allRoles.stream().collect(Collectors.toList());
+            // Print the list of roles
+        roleList.forEach(System.out::println);
+        // Print the list of roles
+        System.out.println("Available roles:");
+        for (int i = 0; i < roleList.size(); i++) {
+            System.out.println((i + 1) + ": " + roleList.get(i));
+        }
+
+        // Prompt the user to choose a role
+        System.out.print("Please choose a role by entering the corresponding number: ");
+        int choice = scanner.nextInt();
+
+        // Validate the user's choice
+        if (choice >= 1 && choice <= roleList.size()) {
+            selectedRole = roleList.get(choice - 1);
+            System.out.println("You have selected: " + selectedRole);
+        } else {
+            System.out.println("Invalid choice. Please run the program again and choose a valid number.");
+        }
+
+        // Close the scanner
+        scanner.close();
+        employeeManagement.changeEmpRole(e,selectedRole);
+    }
+
+
 
     private static void showMenuForManager(Scanner scanner) {
         while (true) {
@@ -85,7 +135,7 @@ public class Main {
                     // Add functionality to list workers by branch
                     break;
                 case 3:
-                    // Add functionality to change role of employee
+                    ChangeEmpRole();
                     break;
                 case 11:
                     System.out.println("Exiting...");
