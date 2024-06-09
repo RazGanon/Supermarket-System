@@ -82,6 +82,7 @@ public class ConstraintsService {
         System.out.println("Submissions have been allowed.");
 
     }
+
     public int getSubmission(){
         return this.submission;
     }

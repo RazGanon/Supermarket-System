@@ -80,4 +80,5 @@ public class ConstraintsController {
         String schedule = scheduleService.generateWeeklySchedule(constraintsService.getAllConstraints());
         System.out.println(schedule);
     }
+
 }

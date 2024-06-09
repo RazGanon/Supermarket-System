@@ -1,13 +1,10 @@
 package Presentation;
-
 import Domain.Employee;
 import Domain.Role;
 import Domain.SuperMarket;
 import Domain.terms;
 import Service.*;
-
 import com.google.gson.Gson;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
@@ -18,7 +15,7 @@ public class Main {
     private static final Gson gson = new Gson();
     private static final ConstraintsService constraintManagement = new ConstraintsService();
     static ScheduleService scheduleService;
-    private static final WorkArrangementService workarrManagement = new WorkArrangementService();
+    //private static final WorkArrangementService workarrManagement = new WorkArrangementService();
     private static ConstraintsController constraintsController;
     private static String user_id;
     private static Employee employeeToCheck = null;
@@ -27,7 +24,7 @@ public class Main {
         try {
             scheduleService = new ScheduleService("Store1", LocalDate.now(), LocalTime.of(8, 0), LocalTime.of(12, 0), LocalTime.of(13, 0), LocalTime.of(17, 0), new SuperMarket("Location", "Manager"), employeeManagement);
             constraintsController = new ConstraintsController(constraintManagement, scheduleService);
-            csvReader.initializeData("resources/data.csv", constraintManagement, employeeManagement, workarrManagement, scheduleService);
+            csvReader.initializeData("resources/data.csv", constraintManagement, employeeManagement,  scheduleService);
         } catch (Exception e) {
             System.out.println("Error initializing data: " + e.getMessage());
         }
@@ -138,7 +135,7 @@ public class Main {
         }
     }
 
-    public void addSuperMarket(Scanner scanner) {
+    private static void addSuperMarket(Scanner scanner) {
         System.out.print("Congrats you had another supermarket: ");
         System.out.print("What is the address? ");
         String address = scanner.nextLine();
@@ -160,10 +157,10 @@ public class Main {
 
         // Add supermarket to the system
         SuperMarket newSuperMarket = new SuperMarket(address, newManager.getFname() + " " + newManager.getLname());
-        SuperMarket.addSuperMarket(newSuperMarket);
+        employeeManagement.addSupermarket(address, managerId);
+        employeeManagement.updateEmployeeSuperMarketBranch(managerId, newSuperMarket);
         System.out.println("Supermarket at " + address + " with manager " + newManager.getFname() + " " + newManager.getLname() + " has been added.");
     }
-
     private static void changeEmpRole(Scanner scanner) {
         System.out.print("Enter employee ID: ");
         String idChoice = scanner.nextLine();
@@ -191,7 +188,6 @@ public class Main {
             System.out.println("Invalid choice. Please run the program again and choose a valid number.");
         }
     }
-
     private static void generateSchedule() {
         Scanner scanner = new Scanner(System.in);
         constraintsController.setShiftRequirements(scanner);
@@ -203,6 +199,7 @@ public class Main {
         String idChoice = scanner.nextLine();
         employeeManagement.getRoleEmployeeById(idChoice);}
 
+
         private static void checkConstraints(Scanner scanner) {
         System.out.print("Enter employee ID: ");
         String idChoice = scanner.nextLine();
@@ -213,22 +210,35 @@ public class Main {
         }
         constraintsController.printConstraintsForEmployee(idChoice);
     }
+    private static void showAllEmployeesInSuperMarket(Scanner scanner) {
+        System.out.print("Enter the location of the supermarket: ");
+        String location = scanner.nextLine();
+        List<Employee> employees = employeeManagement.getAllEmployeesInSuperMarket(location);
+        if (employees.isEmpty()) {
+            System.out.println("No employees found in this supermarket.");
+        } else {
+            System.out.println("Employees in supermarket at " + location + ":");
+            for (Employee employee : employees) {
+                System.out.println(employee.getFname() + " " + employee.getLname() + " (ID: " + employee.getId() + ")");
+            }
+        }
+    }
 
     private static void showMenuForManager(Scanner scanner) {
         while (true) {
             System.out.println("Hello Manager !!");
             System.out.println("Menu:");
             System.out.println("1. Watch The Current Schedule");
-            System.out.println("2. List Of Workers By SuperMarket Branch");
-            System.out.println("3. Change Role Of Employee");
-            System.out.println("4. Add Employee to Shift");
-            System.out.println("5. Check Employee Constraints");
-            System.out.println("6. Generate Schedule By Your Rules");
-            System.out.println("7. Get Employee Role By Id");
-            System.out.println("8. Allow submission");
-            System.out.println("9. Do not allow submission");
-            System.out.println("10. Register New Employee");
-            System.out.println("11. Add SuperMarket To The System");
+            System.out.println("2. Change Role Of Employee");
+            System.out.println("3. Check Employee Constraints");
+            System.out.println("4. Generate Schedule By Your Rules");
+            System.out.println("5. Get Employee Role By Id");
+            System.out.println("6. Allow submission");
+            System.out.println("7. Do not allow submission");
+            System.out.println("8. Register New Employee");
+            System.out.println("9. Add SuperMarket To The System");
+            System.out.println("10. Show me all The Employees in my supermarket");
+            System.out.println("11. Show me all The Employees Constraints");
 
             System.out.println("12. Exit");
             System.out.print("Enter your choice: ");
@@ -240,34 +250,34 @@ public class Main {
                     watchCurrentSchedule();
                     break;
                 case 2:
-                    // Add functionality to list workers by branch
-                    break;
-                case 3:
                     changeEmpRole(scanner);
                     break;
-                case 4:
-                    // ManagerAddEmpToShift();
-                    break;
-                case 5:
+                case 3:
                     checkConstraints(scanner);
                     break;
-                case 6:
+                case 4:
                     generateSchedule();
                     break;
-                case 7:
+                case 5:
                     checkEmployeeRole();
                     break;
-                case 8:
+                case 6:
                     constraintsController.StartSubmission();
                     break;
-                case 9:
+                case 7:
                     constraintsController.stopSubmission();
                     break;
-                case 10:
+                case 8:
                     registerEmployee(scanner);
                     break;
+                case 9:
+                    addSuperMarket(scanner);
+                    break;
+                case 10:
+                    showAllEmployeesInSuperMarket(scanner);
+                    break;
                 case 11:
-
+                    constraintsController.printAllConstraints();
                     break;
                 case 12:
                     System.out.println("Exiting...");
@@ -282,12 +292,9 @@ public class Main {
         while (true) {
             System.out.println("Menu:");
             System.out.println("1. Make Your Constraint For The Next Schedule");
-            System.out.println("2. Send Request For Change Constraints");
-            System.out.println("3. Change Constraints Before The Time Ends");
-            System.out.println("4. Watch Current Schedule");
-            System.out.println("5. Print My Updated Constraints");
-            System.out.println("6. What Is My Role ? ");
-
+            System.out.println("2. Watch Current Schedule");
+            System.out.println("3. Print My Updated Constraints");
+            System.out.println("4. What Is My Role ? ");
             System.out.println("11. Exit");
             System.out.print("Enter your choice: ");
             int choice = scanner.nextInt();
@@ -297,19 +304,14 @@ public class Main {
                 case 1:
                     constraintsController.addConstraints(employeeToCheck.getId(), scanner);
                     break;
+
                 case 2:
-                    // Add functionality to send request for change constraints
-                    break;
-                case 3:
-                    // Add functionality to change constraints before the time ends
-                    break;
-                case 4:
                     watchCurrentSchedule();
                     break;
-                case 5:
+                case 3:
                     constraintsController.printConstraintsForEmployee(employeeToCheck.getId());
                     break;
-                case 6:
+                case 4:
                 Role r = employeeManagement.getRoleEmployeeById(employeeToCheck.getId());
                 break;
                 case 11:

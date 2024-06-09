@@ -27,16 +27,19 @@ public class Employee {
         fName=ifName;
     }
     public void setLname (String ilName){
-        fName=ilName;
+        lName=ilName;
     }
 
     public void setSalary (int iSalary){
         salary=iSalary;
     }
     public String getId () {return id;}
+    public void setId (String id) {this.id =  id;}
+
     public String getFname () {return fName;}
     public String getLname () {return lName;}
     public terms getTerms () {return terms;}
+    public void setTerms (terms t ){this.terms = t;}
     public SuperMarket getSuperMarketBranch () {return SuperMarketBranch;}
 
     public int getSalary () {return salary;}
@@ -47,6 +50,11 @@ public class Employee {
         return this.empcons;
     }
 
+    public void setSuperMarket(SuperMarket s) {
+    this.SuperMarketBranch =s;
+
+
+    }
 
     public void setRole(Role role) {
         this.role = role;
