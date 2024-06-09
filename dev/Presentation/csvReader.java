@@ -3,7 +3,6 @@ package Presentation;
 import Domain.*;
 import Service.ConstraintsService;
 import Service.EmployeeService;
-import Service.WorkArrangementService;
 import Service.ScheduleService;
 
 import java.io.BufferedReader;
@@ -13,7 +12,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class csvReader {
-    public static void initializeData(String filePath, ConstraintsService constraintsService, EmployeeService employeeService, WorkArrangementService workArrangementService, ScheduleService scheduleService) {
+    public static void initializeData(String filePath, ConstraintsService constraintsService, EmployeeService employeeService,  ScheduleService scheduleService) {
         // Reading the CSV file
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;

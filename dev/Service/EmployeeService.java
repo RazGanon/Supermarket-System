@@ -43,6 +43,11 @@ public class EmployeeService {
             return null;
         }
     }
+    public List<Employee> getAllEmployeesInSuperMarket(String superMarketLocation) {
+        return employeeMap.values().stream()
+                .filter(employee -> employee.getSuperMarketBranch().getAddress().equals(superMarketLocation))
+                .collect(Collectors.toList());
+    }
     public Employee registerEmployeeAuto(String fName, String lName, String id, int salary, terms terms, SuperMarket superMarketBranch,String password,Role r) {
         if (id == null || fName == null || lName == null || terms == null || password == null||r == null ) {
             System.out.println("Invalid input. All fields are required.");
@@ -113,5 +118,16 @@ public class EmployeeService {
     }
     public void printempConstraints(Employee e) {
         System.out.println("\n:the constraints of\n"+e.getFname()+" " + e.getConstraint());
+    }
+    // Method to get all employees
+    public List<Employee> getAllEmployees() {
+        return new ArrayList<>(employeeMap.values());
+    }
+    // Method to update an employee's supermarket branch
+    public void updateEmployeeSuperMarketBranch(String employeeId, SuperMarket newSuperMarket) {
+        Employee employee = employeeMap.get(employeeId);
+        if (employee != null) {
+            employee.setSuperMarket(newSuperMarket);
+        }
     }
 }
