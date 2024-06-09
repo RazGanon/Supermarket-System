@@ -1,0 +1,19 @@
+Areas:
+Area1
+Area2
+Sites:
+123 Main St,555-1234,John Doe,ProductA,1,10.5,ProductB,2,20.0,Area1
+456 Elm St,555-5678,Jane Smith,ProductC,3,15.0,ProductD,4,25.0,Area1
+789 Oak St,555-9012,Bob Johnson,ProductE,5,30.0,Area1
+123 Origin St,555-3434,Omer Topg,ProductF,8,15.0,ProductG,9,25.0,Area1
+Trucks:
+ABC123,B,ModelX,2000,5000,true
+DEF456,C,ModelY,2500,6000,true
+GHI789,D,ModelZ,3000,7000,false
+JKL012,E,ModelA,3500,8000,true
+Drivers:
+C,Mor,true,1
+B,Raziel,true,2
+C,Sampson,true,3
+D,Shon ha melech,true,4
+E,Jesie,true,5
