@@ -112,20 +112,12 @@ public class TransportController {
             return "Error: " + e.getMessage();
         }
     }
-    public String changeDestination(int transportId, String oldSiteGson, String newSiteGson,String productsReportGson) {
+    public String changeDestination(int transportId, String oldSiteGson, String newSiteGson) {
         try {
             Transport transport = transportService.getTransportById(transportId);
-            if (transport == null) {
-                return "Transport not found.";
-            }
-            // Get all shipment areas
-            ArrayList<ShipmentArea> shipmentAreas = shipmentAreaService.getShipmentAreas();
             Site oldSite = gson.fromJson(oldSiteGson,Site.class);
             Site newSite = gson.fromJson(newSiteGson,Site.class);
-            ProductsReport productsReport = gson.fromJson(productsReportGson,ProductsReport.class);
-            SiteProductsReport siteProductsReport = new SiteProductsReport(newSite,productsReport);
-            reportService.addSiteProductsReport(siteProductsReport);
-            transportService.changeDestination(oldSite,transportService.getTransportById(transportId),newSite);
+            transportService.changeDestination(oldSite,transport,newSite);
             return "Destination changed successfully.";
         } catch (Exception e) {
             return "Error changing destination: " + e.getMessage();

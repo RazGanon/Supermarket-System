@@ -21,9 +21,6 @@ public class Transport {
         this.requestDay = requestDay;
         this.siteAndProducts = siteAndProducts;
         this.destinations = dest;
-        for (SiteProductsReport spr : siteAndProducts) {
-            this.destinations.add(spr.getSite());
-        }
     }
 
     // Getters and Setters

@@ -1,15 +1,15 @@
 package Domain;
-import java.util.List;
+import java.util.ArrayList;
 
 public class ShipmentArea {
-    private List<Site> sites;
+    private ArrayList<Site> sites;
     private String areaName;
 
-    public void setSites(List<Site> sites) {
+    public void setSites(ArrayList<Site> sites) {
         this.sites = sites;
     }
 
-    public List<Site> getSites() {
+    public ArrayList<Site> getSites() {
         return sites;
     }
 
@@ -17,7 +17,7 @@ public class ShipmentArea {
         return areaName;
     }
 
-    public ShipmentArea(List<Site> sites, String areaName) {
+    public ShipmentArea(ArrayList<Site> sites, String areaName) {
         this.sites = sites;
         this.areaName = areaName;
     }

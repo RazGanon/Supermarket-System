@@ -113,12 +113,11 @@ public class NewMainTest {
         assertEquals("Truck change", updatedTransport.getTsp().getChangesMade());
 
         // Simulate changing the destination for an existing transport
-        input = transportId + "\n123 Main St\n789 Oak St\n2\n";
+        input = transportId + "\n123 Main St\n789 Oak St\n";
         in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
         main.changeDestination(new Scanner(System.in));
         Transport transport = gson.fromJson(transportController.getTransportById(transportId), Transport.class);
-        System.out.println(transport.getTransportId());
         Site site1 = new Site("123 Main St", "John Doe", "555-1234");
         Site site2 = new Site("789 Oak St", "Bob Johnson", "555-9012");
         assertFalse(transport.getDestinations().contains(site1));

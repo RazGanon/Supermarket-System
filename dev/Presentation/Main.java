@@ -17,8 +17,9 @@ public class Main {
     private static TransportController transportController = TransportController.getInstance(truckController.getTruckService(), driverController.getDriverService(), reportController.getReportService(),shipmentAreaController.getShipmentAreaService());
 
     public static void main(String[] args) {
+        String filePath = args[0];
         try {
-            initializeData("data.csv");
+            initializeData(filePath);
         } catch (Exception e) {
             System.out.println("Error initializing data: " + e.getMessage());
         }
@@ -135,22 +136,31 @@ public class Main {
 
         ArrayList<Site> destinationAddresses = new ArrayList<>();
         ArrayList<SiteProductsReport> siteAndProducts = new ArrayList<>();
+
         while (true) {
             System.out.print("Enter Site Name (or 'done' to finish): ");
             String siteName = scanner.nextLine();
             if (siteName.equalsIgnoreCase("done")) {
                 break;
             }
-            System.out.print("Enter products report ID for this site: ");
-            int productsReportId = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
-            ProductsReport productsReport = gson.fromJson(reportController.getProductsReportById(productsReportId), ProductsReport.class);
-            if (productsReport != null) {
-                Site site = new Site(siteName, "", "");
-                destinationAddresses.add(site);
-                siteAndProducts.add(new SiteProductsReport(site, productsReport));
-            } else {
-                System.out.println("ProductsReport not found.");
+
+            // Get the products report for the site
+            String siteAndProductsJson = reportController.getAllSiteProductsReports();
+            Type listType = new TypeToken<ArrayList<SiteProductsReport>>() {}.getType();
+            ArrayList<SiteProductsReport> siteProductsReports = gson.fromJson(siteAndProductsJson, listType);
+
+            boolean siteFound = false;
+            for (SiteProductsReport spr : siteProductsReports) {
+                if (spr.getSite().getAddress().equals(siteName)) {
+                    destinationAddresses.add(spr.getSite());
+                    siteAndProducts.add(spr);
+                    siteFound = true;
+                    break;
+                }
+            }
+
+            if (!siteFound) {
+                System.out.println("Products report for site " + siteName + " not found.");
             }
         }
 
@@ -361,12 +371,8 @@ public class Main {
             String oldSiteName = scanner.nextLine();
             System.out.print("Enter new Site Name: ");
             String newSiteName = scanner.nextLine();
-            System.out.print("Enter Product Report ID For The New Site: ");
-            int productReportId = scanner.nextInt();
-            scanner.nextLine();
             // Get all sites in the area
             String areas = shipmentAreaController.getAllAreas();
-            ProductsReport newProductsReport = gson.fromJson(reportController.getProductsReportById(productReportId), ProductsReport.class);
             Type listType = new TypeToken<ArrayList<ShipmentArea>>() {}.getType();
             ArrayList<ShipmentArea> shipmentAreas = gson.fromJson(areas, listType);
 
@@ -383,8 +389,7 @@ public class Main {
             }
             String oldSiteGson = gson.toJson(oldSite);
             String newSiteGson = gson.toJson(newSite);
-            String productsReport = reportController.getProductsReportById(productReportId);
-            transportController.changeDestination(transportId,oldSiteGson,newSiteGson,productsReport);
+            transportController.changeDestination(transportId,oldSiteGson,newSiteGson);
             System.out.println("Destination changed successfully.");
         } catch (Exception e) {
             System.out.println("Error changing destination: " + e.getMessage());
