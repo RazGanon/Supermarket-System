@@ -1,7 +1,9 @@
-package Domain;
+package Service;
+import Domain.Truck;
+
 import java.util.ArrayList;
 import java.util.List;
-//import java.util.Optional;
+
 
 public class TruckService {
     ArrayList<Truck> trucks;
@@ -14,33 +16,19 @@ public class TruckService {
         trucks.add(truck);
     }
 
-    // Method to update an existing truck
-//    public boolean updateTruck(String licenseNumber, Truck updatedTruck) {
-//        Optional<Truck> existingTruckOpt = trucks.stream()
-//                .filter(t -> t.getLicenseNumber().equals(licenseNumber))
-//                .findFirst();
-//
-//        if (existingTruckOpt.isPresent()) {
-//            Truck existingTruck = existingTruckOpt.get();
-//            existingTruck.setNetWeight(updatedTruck.getNetWeight());
-//            existingTruck.setAvailable(updatedTruck.getAvailable());
-//            // Other fields can be updated similarly
-//            return true;
-//        }
-//        return false;
-//    }
 
-    // Method to remove a truck by license number
     public boolean removeTruck(String licenseNumber) {
         return trucks.removeIf(truck -> truck.getLicenseNumber().equals(licenseNumber));
     }
 
     // Method to get a truck by license number
     public Truck getTruckByLicenseNumber(String licenseNumber) {
-        return trucks.stream()
-                .filter(t -> t.getLicenseNumber().equals(licenseNumber))
-                .findFirst()
-                .orElse(null);
+       for (Truck truck : trucks){
+           if (truck.getLicenseNumber().equals(licenseNumber)){
+               return truck;
+           }
+       }
+       return null;
     }
 
     // Method to get all trucks
@@ -53,8 +41,21 @@ public class TruckService {
         Truck truck = getTruckByLicenseNumber(licenseNumber);
         return truck != null && truck.isAvailable();
     }
+    public boolean isTrackValid(Truck truck,double weight){
+        return truck.getMaxWeight() <= weight;
+    }
 
-    // Method to set a truck's availability
+
+    public Truck getAvailableTruck(double weight) throws Exception {
+        for(Truck truck : trucks){
+            if(truck.isAvailable() && truck.getMaxWeight()>= weight){
+                truck.setAvailable(false);
+                return truck;
+            }
+            }
+
+        throw new Exception("No available truck");
+    }
     public boolean setTruckAvailability(String licenseNumber, boolean available) {
         Truck truck = getTruckByLicenseNumber(licenseNumber);
         if (truck != null) {
@@ -64,13 +65,13 @@ public class TruckService {
         return false;
     }
 
-    public Truck getAvailableTruck() throws Exception {
-        for(Truck truck : trucks){
-            if (truck.isAvailable()){
-                truck.setAvailable(false);
-                return truck;
-            }
+    @Override
+    public String toString() {
+        StringBuilder t_details = new StringBuilder();
+        for (Truck truck : trucks){
+            t_details.append(truck.toString());
+            t_details.append("\n");
         }
-        throw new Exception("No available truck");
+        return t_details.toString();
     }
 }

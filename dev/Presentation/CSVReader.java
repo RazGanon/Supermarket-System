@@ -1,24 +1,30 @@
+package Presentation;
+
 import Domain.*;
-import Service.ProductsReportService;
+import Service.ReportService;
 import Service.TransportService;
 import Service.TruckService;
 import Service.DriverService;
+import Service.ShipmentAreaService;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Map;
 import java.util.HashMap;
+import java.util.ArrayList;
 
 public class CSVReader {
-    public static void initializeData(String filePath, TruckService truckService, DriverService driverService, TransportService transportService, ProductsReportService productsReportService) {
+
+    public static void initializeData(String filePath, TruckService truckService, DriverService driverService, TransportService transportService, ReportService reportService, ShipmentAreaService shipmentAreaService) throws Exception {
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
             String section = "";
-            ArrayList<Site> sites = new ArrayList<>();
-            HashMap<Site, ProductsReport> productReports = new HashMap<>();
+
             while ((line = br.readLine()) != null) {
-                if (line.equalsIgnoreCase("Sites:")) {
+                if (line.equalsIgnoreCase("Areas:")) {
+                    section = "Areas";
+                    continue;
+                } else if (line.equalsIgnoreCase("Sites:")) {
                     section = "Sites";
                     continue;
                 } else if (line.equalsIgnoreCase("Trucks:")) {
@@ -30,7 +36,16 @@ public class CSVReader {
                 }
 
                 String[] values = line.split(",");
+                for (int i = 0; i < values.length; i++) {
+                    values[i] = values[i].trim();
+                }
+
                 switch (section) {
+                    case "Areas":
+                        String areaName = values[0];
+                        shipmentAreaService.addShipmentArea(new ShipmentArea(new ArrayList<>(), areaName));
+                        break;
+
                     case "Sites":
                         String address = values[0];
                         String contactNumber = values[1];
@@ -39,15 +54,17 @@ public class CSVReader {
                         for (int i = 3; i < values.length - 1; i += 3) {
                             products.add(new Product(values[i], Integer.parseInt(values[i + 1]), Double.parseDouble(values[i + 2])));
                         }
-                        double totalWeight = products.stream().mapToDouble(Product::getWeight).sum();
-                        String areaName = values[values.length - 1];
+                        areaName = values[values.length - 1];
                         Site site = new Site(address, contactName, contactNumber);
-                        sites.add(site);
-                        ProductsReport productsReport = new ProductsReport(products, totalWeight);
-                        productsReportService.addProductsReport(productsReport);
-                        productReports.put(site, productsReport);
-                        transportService.addShipmentArea(new ShipmentArea(sites, areaName));
+
+                        shipmentAreaService.addSiteToArea(areaName, site);
+
+                        ProductsReport productsReport = new ProductsReport(products);
+                        reportService.addProductsReport(productsReport);
+                        SiteProductsReport siteProductsReport = new SiteProductsReport(site, productsReport);
+                        reportService.addSiteProductsReport(siteProductsReport);
                         break;
+
                     case "Trucks":
                         String licenseNumber = values[0];
                         String requiredLicense = values[1];
@@ -59,6 +76,7 @@ public class CSVReader {
                         truck.setAvailable(available);
                         truckService.addTruck(truck);
                         break;
+
                     case "Drivers":
                         String licenseType = values[0];
                         String driverName = values[1];
@@ -69,8 +87,6 @@ public class CSVReader {
                         break;
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 }

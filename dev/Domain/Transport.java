@@ -1,62 +1,69 @@
 package Domain;
-import java.time.LocalDate;
-import java.time.LocalTime;
+
 import java.util.ArrayList;
-import java.util.HashMap;
+
 public class Transport {
     private Truck truck;
-    private String t_id;
     private Driver driver;
-    private LocalDate localDate;
-    private LocalTime localTime;
-    private Site source;
+    private Site originAddress;
     private ArrayList<Site> destinations;
-    private TransportReport tsp;
-    private HashMap<Site,ProductsReport> h_map;
+    private ArrayList<SiteProductsReport> siteAndProducts;
+    private String requestedTime;
+    private String requestDay;
+    private TransportReport transportReport;
 
-    Transport(Truck t,Driver d,Site s,TransportReport tsp,LocalTime time , LocalDate date){
-        this.truck = t;
-        this.driver = d;
-        this.source = s;
-        this.localTime = time;
-        this.localDate = date;
-        this.destinations = new ArrayList<Site>();
-        this.tsp = tsp;
-        this.h_map = new HashMap<Site,ProductsReport>();
+    public Transport(Truck truck, Driver driver, Site originAddress, TransportReport transportReport, String requestedTime, String requestDay, ArrayList<SiteProductsReport> siteAndProducts,ArrayList<Site> dest) {
+        this.truck = truck;
+        this.driver = driver;
+        this.originAddress = originAddress;
+        this.transportReport = transportReport;
+        this.requestedTime = requestedTime;
+        this.requestDay = requestDay;
+        this.siteAndProducts = siteAndProducts;
+        this.destinations = dest;
+        for (SiteProductsReport spr : siteAndProducts) {
+            this.destinations.add(spr.getSite());
+        }
     }
-    public Truck getTruck(){
+
+    // Getters and Setters
+    public int getTransportId() {
+        return transportReport.getReportId();
+    }
+
+    public Truck getTruck() {
         return truck;
     }
-
-    public TransportReport getTsp() {
-        return tsp;
-    }
-
-    public Driver getDriver(){
-        return driver;
-    }
-    public String getTransportId(){
-        return this.t_id;
-    }
-
 
     public void setTruck(Truck truck) {
         this.truck = truck;
     }
 
-    public void setLocalDate(LocalDate localDate) {
-        this.localDate = localDate;
+    public Driver getDriver() {
+        return driver;
     }
 
-    public void setLocalTime(LocalTime localTime) {
-        this.localTime = localTime;
+    public Site getOriginAddress() {
+        return originAddress;
     }
 
     public ArrayList<Site> getDestinations() {
         return destinations;
     }
 
-    public HashMap<Site, ProductsReport> getH_map() {
-        return h_map;
+    public ArrayList<SiteProductsReport> getSiteAndProducts() {
+        return siteAndProducts;
+    }
+
+    public String getRequestedTime() {
+        return requestedTime;
+    }
+
+    public String getRequestDay() {
+        return requestDay;
+    }
+
+    public TransportReport getTsp() {
+        return transportReport;
     }
 }

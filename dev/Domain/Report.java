@@ -1,13 +1,12 @@
 package Domain;
 
 public abstract class Report {
-    private static int nextId = 1;
-    private int id;
-    Report(){
+    protected static int nextId = 1;
+    protected int id;
+    public Report(){
         this.id = nextId++;
     }
     public int getReportId(){
         return this.id;
     }
-
 }

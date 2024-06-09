@@ -1,53 +1,50 @@
 package Domain;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class TransportRequest {
-    private LocalDate requestDay;
-    private LocalTime requestedTime;
+    private String requestDay;
+    private String requestedTime;
     private Site originAddress;
     private ArrayList<Site> destinationAddresses;
-    private ArrayList<ProductsReport> product_reports;
-    private String requiredLicense;
-    private double transportWeight;
+    private ArrayList<SiteProductsReport> siteProductsReports;
+    private long driverId;
+    private String truckLicenseNumber;
 
     // Constructors, getters, and setters
-    public TransportRequest(LocalDate requestDay, LocalTime requestedTime, Site originAddress, ArrayList<Site> destinationAddresses,ArrayList<ProductsReport> p_reports,String r_license,double t_weight) {
+    public TransportRequest(String requestDay, String requestedTime, Site originAddress, ArrayList<SiteProductsReport> siteProductsReports, String truckLicenseNumber, long driverId,ArrayList<Site> dest) {
         this.requestDay = requestDay;
         this.requestedTime = requestedTime;
         this.originAddress = originAddress;
-        this.destinationAddresses = destinationAddresses;
-        this.product_reports = p_reports;
-        this.requiredLicense = r_license;
-        this.transportWeight = t_weight;
+        this.destinationAddresses = dest;
+        this.siteProductsReports = siteProductsReports;
+        this.truckLicenseNumber = truckLicenseNumber;
+        this.driverId = driverId;
     }
 
-    public String getRequiredLicense() {
-        return requiredLicense;
+    public String getTruckLicenseNumber() {
+        return truckLicenseNumber;
     }
 
-    public double getTransportWeight() {
-        return transportWeight;
-    }
-
-    public LocalDate getRequestDay() {
+    public String getRequestDay() {
         return requestDay;
     }
 
-    public void setRequestDay(LocalDate requestDay) {
+    public void setRequestDay(String requestDay) {
         this.requestDay = requestDay;
     }
 
-    public LocalTime getRequestedTime() {
+    public String getRequestedTime() {
         return requestedTime;
     }
 
-    public void setRequestedTime(LocalTime requestedTime) {
+    public void setRequestedTime(String requestedTime) {
         this.requestedTime = requestedTime;
     }
 
+    public long getDriverId() {
+        return driverId;
+    }
 
     public Site getOriginAddress() {
         return originAddress;
@@ -60,8 +57,8 @@ public class TransportRequest {
     public ArrayList<Site> getDestinationAddresses() {
         return destinationAddresses;
     }
-    public ArrayList<ProductsReport> getProduct_reports(){
-        return this.product_reports;
-    }
 
+    public ArrayList<SiteProductsReport> getSiteProductsReports() {
+        return siteProductsReports;
+    }
 }

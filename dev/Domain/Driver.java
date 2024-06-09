@@ -4,7 +4,17 @@ public class Driver {
     private String licenseType;
     private String driverName;
     private boolean available;
+    private long id;
+    public Driver(String licenseType, String driverName, boolean available,long id) {
+        this.licenseType = licenseType;
+        this.driverName = driverName;
+        this.available = available;
+        this.id = id;
 
+    }
+    public long getId(){
+        return this.id;
+    }
     public void setLicenseType(String licenseType) {
         this.licenseType = licenseType;
     }
@@ -25,9 +35,8 @@ public class Driver {
         return available;
     }
 
-    public Driver(String licenseType, String driverName, boolean available) {
-        this.licenseType = licenseType;
-        this.driverName = driverName;
-        this.available = available;
+
+    public String toString() {
+        return "Driver Name: " + driverName + ", License Type: " + licenseType + ", Available: " + available;
     }
 }

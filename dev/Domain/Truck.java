@@ -13,7 +13,7 @@ public class Truck {
         this.model = m;
         this.netWeight = n_weight;
         this.maxWeight = m_weight;
-        this.available = false;
+        this.available = true;
         this.requiredLicense = r_license;
     }
 
@@ -46,5 +46,9 @@ public class Truck {
 
     public void setAvailable(boolean available) {
         this.available = available;
+    }
+    public String toString() {
+        return "Truck License Number: " + licenseNumber + ", Model: " + model + ", Net Weight: " + netWeight +
+                ", Max Weight: " + maxWeight + ", Required License: " + requiredLicense + ", Available: " + available;
     }
 }
