@@ -1,8 +1,5 @@
 package Presentation;
-import Domain.Employee;
-import Domain.Role;
-import Domain.SuperMarket;
-import Domain.terms;
+import Domain.*;
 import Service.*;
 import com.google.gson.Gson;
 import java.time.LocalDate;
@@ -223,7 +220,39 @@ public class Main {
             }
         }
     }
+    private static void addAndRetrieveSchedules(Employee employee) {
+        Shift shift1 = new Shift("Morning", "08:00", "16:00");
+        Shift shift2 = new Shift("Evening", "16:00", "00:00");
 
+        Schedule schedule1 = new Schedule(LocalDate.now(), Arrays.asList(shift1, shift2));
+        Schedule schedule2 = new Schedule(LocalDate.now().minusDays(1), Arrays.asList(shift1));
+
+        employee.addSchedule(schedule1);
+        employee.addSchedule(schedule2);
+
+        List<Schedule> pastSchedules = employee.getPastSchedules();
+        System.out.println("Past schedules for employee " + employee.getFname() + " " + employee.getLname() + ":");
+        for (Schedule schedule : pastSchedules) {
+            System.out.println("Date: " + schedule.getDate());
+            for (Shift shift : schedule.getShifts()) {
+                System.out.println("  Shift: " + shift.getShiftType() + " from " + shift.getStartTime() + " to " + shift.getEndTime());
+            }
+        }
+    }
+    private static void showPastSchedulesForEmployee(Employee employee) {
+        List<Schedule> pastSchedules = employee.getPastSchedules();
+        if (pastSchedules.isEmpty()) {
+            System.out.println("No past schedules found for employee " + employee.getFname() + " " + employee.getLname());
+        } else {
+            System.out.println("Past schedules for employee " + employee.getFname() + " " + employee.getLname() + ":");
+            for (Schedule schedule : pastSchedules) {
+                System.out.println("Date: " + schedule.getDate());
+                for (Shift shift : schedule.getShifts()) {
+                    System.out.println("  Shift: " + shift.getShiftType() + " from " + shift.getStartTime() + " to " + shift.getEndTime());
+                }
+            }
+        }
+    }
     private static void showMenuForManager(Scanner scanner) {
         while (true) {
             System.out.println("Hello Manager !!");
@@ -239,7 +268,6 @@ public class Main {
             System.out.println("9. Add SuperMarket To The System");
             System.out.println("10. Show me all The Employees in my supermarket");
             System.out.println("11. Show me all The Employees Constraints");
-
             System.out.println("12. Exit");
             System.out.print("Enter your choice: ");
             int choice = scanner.nextInt();
@@ -295,6 +323,7 @@ public class Main {
             System.out.println("2. Watch Current Schedule");
             System.out.println("3. Print My Updated Constraints");
             System.out.println("4. What Is My Role ? ");
+            System.out.println("5. View Past Schedules");
             System.out.println("11. Exit");
             System.out.print("Enter your choice: ");
             int choice = scanner.nextInt();
@@ -314,6 +343,9 @@ public class Main {
                 case 4:
                 Role r = employeeManagement.getRoleEmployeeById(employeeToCheck.getId());
                 break;
+                case 5:
+                    showPastSchedulesForEmployee(employeeToCheck);
+                    break;
                 case 11:
                     System.out.println("Exiting...");
                     return;
