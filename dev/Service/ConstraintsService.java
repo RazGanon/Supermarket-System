@@ -33,7 +33,7 @@ public class ConstraintsService {
             return matrix;
         }
 
-        // This method gets row (day) and col (shift) and puts the binary number 0 if can't work and 1 if can work
+        // This method gets row (shift) and col (days) and puts the binary number 0 if can't work and 1 if can work
         public void addConstraint(String id, int row, int col, int binary) {
             Constraints constraints = constraintsMap.get(id);
             if (constraints != null) {

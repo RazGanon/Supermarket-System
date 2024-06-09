@@ -98,21 +98,68 @@ public class Main {
 
         // Prompt the user to choose a role
         System.out.print("Please choose a role by entering the corresponding number: ");
-        int choice = scanner.nextInt();
+        int choice1 = scanner.nextInt();
 
         // Validate the user's choice
-        if (choice >= 1 && choice <= roleList.size()) {
-            selectedRole = roleList.get(choice - 1);
+        if (choice1 >= 1 && choice1 <= roleList.size()) {
+            selectedRole = roleList.get(choice1 - 1);
             System.out.println("You have selected: " + selectedRole);
         } else {
-            System.out.println("Invalid choice. Please run the program again and choose a valid number.");
+            System.out.println("Invalid choice.  Please run the program again and choose a valid number.");
         }
 
-        // Close the scanner
-        scanner.close();
         employeeManagement.changeEmpRole(e,selectedRole);
     }
 
+    private static void ManagerAddEmpToShift() {
+        Scanner scanner = new Scanner(System.in);
+
+        // Request employee ID
+        System.out.println("Enter employee ID:");
+        String idChoice = scanner.nextLine();
+
+        // Find employee by ID
+        Employee e = employeeManagement.getEmployeeById(idChoice);
+        if (e == null) {
+            System.out.println("Employee not found. Please try again.");
+            return;
+        }
+
+        // Prompt for day with validation
+        int day = 0;
+        while (day < 1 || day > 6) {
+            System.out.println("In which day?");
+            System.out.println("1. Sunday");
+            System.out.println("2. Monday");
+            System.out.println("3. Tuesday");
+            System.out.println("4. Wednesday");
+            System.out.println("5. Thursday");
+            System.out.println("6. Friday");
+            day = scanner.nextInt();
+            if (day < 1 || day > 6) {
+                System.out.println("Invalid choice. Please enter a number between 1 and 6.");
+            }
+        }
+
+        // Prompt for shift with validation
+        int shift = 0;
+        while (shift < 1 || shift > 2) {
+            System.out.println("In which shift?");
+            System.out.println("1. Morning");
+            System.out.println("2. Evening");
+            shift = scanner.nextInt();
+            if (shift < 1 || shift > 2) {
+                System.out.println("Invalid choice. Please enter 1 for Morning or 2 for Evening.");
+            }
+        }
+
+        // Assume 'bi' is a flag indicating the employee can work on this shift
+        int bi = 1;
+
+        // Add constraint to employee
+        constraintManagement.addConstraint(idChoice, shift, day, bi);
+        System.out.println("Constraint added successfully.");
+    }
 
 
     private static void showMenuForManager(Scanner scanner) {
@@ -122,6 +169,8 @@ public class Main {
             System.out.println("1. Watch The Current Schedule");
             System.out.println("2. List Of Workers By SuperMarket Branch");
             System.out.println("3. Change Role Of Employee");
+            System.out.println("3. Add employee to shift ");
+
             System.out.println("11. Exit");
             System.out.print("Enter your choice: ");
             int choice = scanner.nextInt();
@@ -136,6 +185,9 @@ public class Main {
                     break;
                 case 3:
                     ChangeEmpRole();
+                    break;
+                case 4:
+                    ManagerAddEmpToShift();
                     break;
                 case 11:
                     System.out.println("Exiting...");
