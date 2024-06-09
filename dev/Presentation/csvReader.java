@@ -27,6 +27,10 @@ public class csvReader {
                     section = "Emp";
                     continue;
                 }
+                if (line.equalsIgnoreCase("SuperMarkets")) {
+                    section = "Sm";
+                    continue;
+                }
                 if (line.equalsIgnoreCase("")){
                 section = "end";}
 
@@ -47,7 +51,7 @@ public class csvReader {
                         String password = values[10];
 
                         // Create necessary objects
-                        terms t = new terms(startDate, role , wage, daysOff);
+                        terms t = new terms(startDate, role , daysOff);
                         SuperMarket superMarket = new SuperMarket(locationOfSuper, managerFullName);
                         Role r = Role.valueOf(role);
 
@@ -58,8 +62,23 @@ public class csvReader {
 
                         employees.add(employee);
                         break;
+                    case "Sm":
+                        // Parse the supermarket details
+                        String address = values[0];
+                        String manager = values[1];
+
+                        // Create a supermarket and add to the list if not already present
+                        SuperMarket existingSuperMarket = SuperMarket.findSuperMarketByAddress(address);
+                        if (existingSuperMarket == null) {
+                            SuperMarket newSuperMarket = new SuperMarket(address, manager);
+                            SuperMarket.addSuperMarket(newSuperMarket);
+                        }
+                        break;
+
                 }
+
             }
+
 
         } catch (IOException e) {
             e.printStackTrace();

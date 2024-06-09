@@ -7,40 +7,63 @@ import java.util.Map;
 
 public class Shift {
     private SuperMarket branch;
-    private List<String> available_employees; //stores the IDs of employees who have marked themselves as available for this shift.
+    private List<String> availableEmployees; // Stores the IDs of employees who have marked themselves as available for this shift
     private Map<Role, List<String>> employees;
-    private List<Integer> manager_constraints;
+    private List<Integer> managerConstraints;
     private boolean confirmed;
-    private ShiftType type; // morning/evening
+    private ShiftType type; // Morning/evening
     private DayShift day;
 
+    /**
+     * Constructor for the Shift class.
+     *
+     * @param branch the supermarket branch where the shift is scheduled
+     * @param type   the type of shift (morning/evening)
+     * @param day    the day of the shift
+     */
     public Shift(SuperMarket branch, ShiftType type, DayShift day) {
-        available_employees = new LinkedList<>();
-        employees = new HashMap<>();
+        if (branch == null || type == null || day == null) {
+            throw new IllegalArgumentException("Branch, type, and day cannot be null");
+        }
+        this.availableEmployees = new LinkedList<>();
+        this.employees = new HashMap<>();
         this.type = type;
-        confirmed = false;
+        this.confirmed = false;
         this.branch = branch;
-        manager_constraints = new LinkedList<>();
+        this.managerConstraints = new LinkedList<>();
         this.day = day;
     }
 
+    /**
+     * Adds an employee to the list of those available for the shift.
+     *
+     * @param employeeId the ID of the employee to add
+     */
     public void addEmployeeAvailability(String employeeId) {
-        if (!available_employees.contains(employeeId)) { // check if employee is already in available_employees
-            available_employees.add(employeeId);
+        if (!availableEmployees.contains(employeeId)) { // Check if employee is already in availableEmployees
+            availableEmployees.add(employeeId);
         }
     }
 
+    /**
+     * Checks if an employee is available for the shift.
+     *
+     * @param employeeId the ID of the employee to check
+     * @return true if the employee is available, false otherwise
+     */
     public boolean isEmployeeAvailable(String employeeId) {
-        return available_employees.contains(employeeId);
+        return availableEmployees.contains(employeeId);
     }
 
     @Override
     public String toString() {
         return "Shift{" +
-                " Supermarket branch=" + branch +
+                "superMarketBranch=" + branch +
                 ", type=" + type +
                 ", day=" + day +
-                ", availableEmployees=" + available_employees +
+                ", availableEmployees=" + availableEmployees +
+                ", confirmed=" + confirmed +
+                ", managerConstraints=" + managerConstraints +
                 '}';
     }
 }

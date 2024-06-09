@@ -79,9 +79,18 @@ public class EmployeeService {
         }
         return employeeMap.get(id);
     }
-
+    public Role getRoleEmployeeById(String id) {
+        Role R ;
+        if (!employeeMap.containsKey(id)) {
+            System.out.println("Employee with ID: " + id + " does not exist.");
+            return null; // if employee is not in the system
+        }
+        R = employeeMap.get(id).getRole();
+        System.out.println(R);
+        return R;
+    }
     public terms setTerms(LocalDate startdate, String jobtype, String wage, String daysoff) {
-        return new terms(startdate, jobtype, wage, daysoff);
+        return new terms(startdate, jobtype, daysoff);
     }
 
     public SuperMarket addSupermarket(String address, String managerName) {
@@ -101,5 +110,8 @@ public class EmployeeService {
 
     public void printListEmpl() {
         System.out.println("\nThe Map Contains Following Elements: \n\n" + employeeMap);
+    }
+    public void printempConstraints(Employee e) {
+        System.out.println("\n:the constraints of\n"+e.getFname()+" " + e.getConstraint());
     }
 }

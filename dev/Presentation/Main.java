@@ -3,57 +3,52 @@ package Presentation;
 import Domain.Employee;
 import Domain.Role;
 import Domain.SuperMarket;
+import Domain.terms;
 import Service.*;
 
 import com.google.gson.Gson;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Scanner;
-import java.util.stream.Collectors;
-
-import static Presentation.csvReader.initializeData;
+import java.util.*;
 
 public class Main {
-    private static EmployeeService employeeManagement = new EmployeeService();
-    private static UserService userManagement = new UserService();
-    private static Gson gson = new Gson();
-    private static ConstraintsService constraintManagement = new ConstraintsService();
-    private static ScheduleService scheduleService;
-    private static WorkArrangementService workarrManagement;
+    private static final EmployeeService employeeManagement = new EmployeeService();
+    private static final UserService userManagement = new UserService();
+    private static final Gson gson = new Gson();
+    private static final ConstraintsService constraintManagement = new ConstraintsService();
+    static ScheduleService scheduleService;
+    private static final WorkArrangementService workarrManagement = new WorkArrangementService();
+    private static ConstraintsController constraintsController;
     private static String user_id;
+    private static Employee employeeToCheck = null;
 
     public static void main(String[] args) {
         try {
-            // Example initialization of ScheduleService
-            scheduleService = new ScheduleService("Store1", LocalDate.now(), LocalTime.of(8, 0), LocalTime.of(12, 0), LocalTime.of(13, 0), LocalTime.of(17, 0), new SuperMarket("Location", "Manager"));
-
-            csvReader.initializeData("resources/data.csv",constraintManagement,employeeManagement,workarrManagement,scheduleService);
+            scheduleService = new ScheduleService("Store1", LocalDate.now(), LocalTime.of(8, 0), LocalTime.of(12, 0), LocalTime.of(13, 0), LocalTime.of(17, 0), new SuperMarket("Location", "Manager"), employeeManagement);
+            constraintsController = new ConstraintsController(constraintManagement, scheduleService);
+            csvReader.initializeData("resources/data.csv", constraintManagement, employeeManagement, workarrManagement, scheduleService);
         } catch (Exception e) {
             System.out.println("Error initializing data: " + e.getMessage());
         }
 
-        // Create scanner object to read user input from the console
         Scanner scanner = new Scanner(System.in);
         while (true) {
             System.out.println("Enter username: ");
             String username = scanner.nextLine();
-            user_id=username;
+            user_id = username;
             System.out.println("Enter password: ");
             String password = scanner.nextLine();
 
-            // Verify the employee using the username (assuming username is the employee ID)
-            Employee employeeToCheck = employeeManagement.getEmployeeById(username);
+            employeeToCheck = employeeManagement.getEmployeeById(username);
             if (employeeToCheck == null) {
-                System.out.println("Invalid username Please try again.");
+                System.out.println("Invalid username. Please try again.");
                 continue;
             }
-            if (!employeeToCheck.getPassword().equals(password)){
-                System.out.println("Invalid password Please try again.");
-            continue;
-        }
+            if (!employeeToCheck.getPassword().equals(password)) {
+                System.out.println("Invalid password. Please try again.");
+                continue;
+            }
 
             boolean isManager = employeeManagement.isManager(employeeToCheck);
             if (isManager) {
@@ -68,110 +63,174 @@ public class Main {
         String currentSchedule = scheduleService.getCurrentSchedule();
         System.out.println(currentSchedule);
     }
-    public static void PrintListOfEmplByBranch(){
 
+    //IF ADMIN WANT TO REGISTER EMPLOYEE MANUALLY
+    private static void registerEmployee(Scanner scanner) {
+        System.out.print("Enter employee first name: ");
+        String firstName = scanner.nextLine();
+        System.out.print("Enter employee last name: ");
+        String lastName = scanner.nextLine();
+        System.out.print("Enter employee ID: ");
+        String id = scanner.nextLine();
+        System.out.print("Enter employee salary: ");
+        int salary = Integer.parseInt(scanner.nextLine());
+        String dayOff = "0"; // start with 0 days off
 
-    }
-    public static void ChangeEmpRole(){
-        Role selectedRole = null;
-        //requst emp id
-        //use user input
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("add employee id");
-        String idchoice = String.valueOf(scanner.nextInt());
-        //find this emp by his id :
-        Employee e =employeeManagement.getEmployeeById(idchoice);
-
-
-        //ask user to choose the new role for emp
-            // Get all roles in the Role enum
-        EnumSet<Role> allRoles = EnumSet.allOf(Role.class);
-            // Convert EnumSet to List
-        List<Role> roleList = allRoles.stream().collect(Collectors.toList());
-            // Print the list of roles
-        roleList.forEach(System.out::println);
-        // Print the list of roles
-        System.out.println("Available roles:");
-        for (int i = 0; i < roleList.size(); i++) {
-            System.out.println((i + 1) + ": " + roleList.get(i));
+        String jobType = "";
+        while (true) {
+            System.out.print("Choose job type:\n1. Full-Time Job\n2. Part-Time Job\nEnter your choice: ");
+            int jobTypeChoice = Integer.parseInt(scanner.nextLine());
+            if (jobTypeChoice == 1) {
+                jobType = "Full-Time Job";
+                break;
+            } else if (jobTypeChoice == 2) {
+                jobType = "Part-Time Job";
+                break;
+            } else {
+                System.out.println("Invalid choice. Please try again.");
+            }
         }
 
-        // Prompt the user to choose a role
-        System.out.print("Please choose a role by entering the corresponding number: ");
-        int choice1 = scanner.nextInt();
+        // Show the list of supermarkets and let the user choose one
+        System.out.println("Choose a supermarket from the following list:");
+        List<SuperMarket> superMarkets = SuperMarket.getAllSuperMarkets();
+        for (int i = 0; i < superMarkets.size(); i++) {
+            System.out.println((i + 1) + ". " + superMarkets.get(i));
+        }
+        SuperMarket chosenSuperMarket = null;
+        while (true) {
+            System.out.print("Enter your choice (number): ");
+            int choice = Integer.parseInt(scanner.nextLine());
+            if (choice >= 1 && choice <= superMarkets.size()) {
+                chosenSuperMarket = superMarkets.get(choice - 1);
+                break;
+            } else {
+                System.out.println("Invalid choice. Please try again.");
+            }
+        }
+        LocalDate date = LocalDate.now();
+        terms newTerms = new terms(date, jobType,dayOff);
 
-        // Validate the user's choice
-        if (choice1 >= 1 && choice1 <= roleList.size()) {
-            selectedRole = roleList.get(choice1 - 1);
-            System.out.println("You have selected: " + selectedRole);
+        // Assuming registerEmployeeManually takes these parameters
+        employeeManagement.registerEmployeeManually(firstName, lastName, id, salary,newTerms,chosenSuperMarket);
+
+        System.out.println("Employee registered successfully.");
+    }
+    private static void deleteSuperMarket(Scanner scanner) {
+        System.out.println("Choose a supermarket to delete from the following list:");
+        List<SuperMarket> superMarkets = SuperMarket.getAllSuperMarkets();
+        for (int i = 0; i < superMarkets.size(); i++) {
+            System.out.println((i + 1) + ". " + superMarkets.get(i));
+        }
+
+        System.out.print("Enter your choice (number): ");
+        int choice = Integer.parseInt(scanner.nextLine());
+        if (choice >= 1 && choice <= superMarkets.size()) {
+            SuperMarket chosenSuperMarket = superMarkets.get(choice - 1);
+            boolean isRemoved = SuperMarket.removeSuperMarketByAddress(chosenSuperMarket.getAddress());
+            if (isRemoved) {
+                System.out.println("Supermarket at " + chosenSuperMarket.getAddress() + " has been deleted.");
+            } else {
+                System.out.println("Failed to delete the supermarket. Please try again.");
+            }
         } else {
-            System.out.println("Invalid choice.  Please run the program again and choose a valid number.");
+            System.out.println("Invalid choice. Please try again.");
         }
-
-        employeeManagement.changeEmpRole(e,selectedRole);
     }
 
-    private static void ManagerAddEmpToShift() {
-        Scanner scanner = new Scanner(System.in);
+    public void addSuperMarket(Scanner scanner) {
+        System.out.print("Congrats you had another supermarket: ");
+        System.out.print("What is the address? ");
+        String address = scanner.nextLine();
+        System.out.print("What is the ID of the new manager? ");
+        String managerId = scanner.nextLine();
 
-        // Request employee ID
-        System.out.println("Enter employee ID:");
+        // Check if the manager is in the system
+        Employee newManager = employeeManagement.getEmployeeById(managerId);
+        if (newManager == null) {
+            System.out.println("This ID is not in the system. Please try again.");
+            return;
+        }
+
+        // Check employee role; if not manager, change role to manager
+        Role role = newManager.getRole();
+        if (role != Role.Manager) {
+            newManager.setRole(Role.Manager);
+        }
+
+        // Add supermarket to the system
+        SuperMarket newSuperMarket = new SuperMarket(address, newManager.getFname() + " " + newManager.getLname());
+        SuperMarket.addSuperMarket(newSuperMarket);
+        System.out.println("Supermarket at " + address + " with manager " + newManager.getFname() + " " + newManager.getLname() + " has been added.");
+    }
+
+    private static void changeEmpRole(Scanner scanner) {
+        System.out.print("Enter employee ID: ");
         String idChoice = scanner.nextLine();
-
-        // Find employee by ID
         Employee e = employeeManagement.getEmployeeById(idChoice);
         if (e == null) {
             System.out.println("Employee not found. Please try again.");
             return;
         }
 
-        // Prompt for day with validation
-        int day = 0;
-        while (day < 1 || day > 6) {
-            System.out.println("In which day?");
-            System.out.println("1. Sunday");
-            System.out.println("2. Monday");
-            System.out.println("3. Tuesday");
-            System.out.println("4. Wednesday");
-            System.out.println("5. Thursday");
-            System.out.println("6. Friday");
-            day = scanner.nextInt();
-            if (day < 1 || day > 6) {
-                System.out.println("Invalid choice. Please enter a number between 1 and 6.");
-            }
+        List<Role> roleList = new ArrayList<>(EnumSet.allOf(Role.class));
+        System.out.println("Available roles:");
+        for (int i = 0; i < roleList.size(); i++) {
+            System.out.println((i + 1) + ": " + roleList.get(i));
         }
 
-        // Prompt for shift with validation
-        int shift = 0;
-        while (shift < 1 || shift > 2) {
-            System.out.println("In which shift?");
-            System.out.println("1. Morning");
-            System.out.println("2. Evening");
-            shift = scanner.nextInt();
-            if (shift < 1 || shift > 2) {
-                System.out.println("Invalid choice. Please enter 1 for Morning or 2 for Evening.");
-            }
+        System.out.print("Please choose a role by entering the corresponding number: ");
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+
+        if (choice >= 1 && choice <= roleList.size()) {
+            Role selectedRole = roleList.get(choice - 1);
+            employeeManagement.changeEmpRole(e, selectedRole);
+            System.out.println("Role updated successfully.");
+        } else {
+            System.out.println("Invalid choice. Please run the program again and choose a valid number.");
         }
-
-        // Assume 'bi' is a flag indicating the employee can work on this shift
-        int bi = 1;
-
-        // Add constraint to employee
-        constraintManagement.addConstraint(idChoice, shift, day, bi);
-        System.out.println("Constraint added successfully.");
     }
 
+    private static void generateSchedule() {
+        Scanner scanner = new Scanner(System.in);
+        constraintsController.setShiftRequirements(scanner);
+        constraintsController.generateWeeklySchedule();
+    }
+    private static void checkEmployeeRole() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter The employee ID That You Want To Check Is Role : ");
+        String idChoice = scanner.nextLine();
+        employeeManagement.getRoleEmployeeById(idChoice);}
+
+        private static void checkConstraints(Scanner scanner) {
+        System.out.print("Enter employee ID: ");
+        String idChoice = scanner.nextLine();
+        Employee e = employeeManagement.getEmployeeById(idChoice);
+        if (e == null) {
+            System.out.println("Employee not found. Please try again.");
+            return;
+        }
+        constraintsController.printConstraintsForEmployee(idChoice);
+    }
 
     private static void showMenuForManager(Scanner scanner) {
         while (true) {
-            System.out.println("Hello Manager !! ");
+            System.out.println("Hello Manager !!");
             System.out.println("Menu:");
             System.out.println("1. Watch The Current Schedule");
             System.out.println("2. List Of Workers By SuperMarket Branch");
             System.out.println("3. Change Role Of Employee");
-            System.out.println("3. Add employee to shift ");
+            System.out.println("4. Add Employee to Shift");
+            System.out.println("5. Check Employee Constraints");
+            System.out.println("6. Generate Schedule By Your Rules");
+            System.out.println("7. Get Employee Role By Id");
+            System.out.println("8. Allow submission");
+            System.out.println("9. Do not allow submission");
+            System.out.println("10. Register New Employee");
+            System.out.println("11. Add SuperMarket To The System");
 
-            System.out.println("11. Exit");
+            System.out.println("12. Exit");
             System.out.print("Enter your choice: ");
             int choice = scanner.nextInt();
             scanner.nextLine(); // Consume newline
@@ -184,12 +243,33 @@ public class Main {
                     // Add functionality to list workers by branch
                     break;
                 case 3:
-                    ChangeEmpRole();
+                    changeEmpRole(scanner);
                     break;
                 case 4:
-                    ManagerAddEmpToShift();
+                    // ManagerAddEmpToShift();
+                    break;
+                case 5:
+                    checkConstraints(scanner);
+                    break;
+                case 6:
+                    generateSchedule();
+                    break;
+                case 7:
+                    checkEmployeeRole();
+                    break;
+                case 8:
+                    constraintsController.StartSubmission();
+                    break;
+                case 9:
+                    constraintsController.stopSubmission();
+                    break;
+                case 10:
+                    registerEmployee(scanner);
                     break;
                 case 11:
+
+                    break;
+                case 12:
                     System.out.println("Exiting...");
                     return;
                 default:
@@ -205,6 +285,9 @@ public class Main {
             System.out.println("2. Send Request For Change Constraints");
             System.out.println("3. Change Constraints Before The Time Ends");
             System.out.println("4. Watch Current Schedule");
+            System.out.println("5. Print My Updated Constraints");
+            System.out.println("6. What Is My Role ? ");
+
             System.out.println("11. Exit");
             System.out.print("Enter your choice: ");
             int choice = scanner.nextInt();
@@ -212,7 +295,7 @@ public class Main {
 
             switch (choice) {
                 case 1:
-                    constraintManagement.getConstraintFromUser();
+                    constraintsController.addConstraints(employeeToCheck.getId(), scanner);
                     break;
                 case 2:
                     // Add functionality to send request for change constraints
@@ -223,6 +306,12 @@ public class Main {
                 case 4:
                     watchCurrentSchedule();
                     break;
+                case 5:
+                    constraintsController.printConstraintsForEmployee(employeeToCheck.getId());
+                    break;
+                case 6:
+                Role r = employeeManagement.getRoleEmployeeById(employeeToCheck.getId());
+                break;
                 case 11:
                     System.out.println("Exiting...");
                     return;

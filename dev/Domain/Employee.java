@@ -10,6 +10,7 @@ public class Employee {
     private SuperMarket SuperMarketBranch; //the super market branch where the emploee works
     private Role role ;
     private String password;
+    private Constraints empcons;
 
     // constructors / standard setters / getters
     public Employee (String empfName, String emplName, String empId, int empSalary, terms empTerms, SuperMarket empSuperMarketBranch) {
@@ -42,6 +43,10 @@ public class Employee {
     public Role getRole() {
         return role;
     }
+    public Constraints getConstraint() {
+        return this.empcons;
+    }
+
 
     public void setRole(Role role) {
         this.role = role;
