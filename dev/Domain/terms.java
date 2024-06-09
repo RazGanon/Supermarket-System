@@ -11,10 +11,9 @@ public class terms {
     private String daysOff; //number of days off that left for this employee
 
     //constructor
-    public terms (LocalDate startDate, String JobType, String Wage, String daysOff) {
+    public terms (LocalDate startDate, String JobType,  String daysOff) {
         this.daysOff=daysOff;
         this.JobType=JobType;
-        this.Wage=Wage;
         this.startDate=startDate;
 
     }
