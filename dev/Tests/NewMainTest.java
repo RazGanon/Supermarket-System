@@ -12,11 +12,7 @@ import java.util.Scanner;
 import static org.junit.Assert.*;
 
 public class NewMainTest {
-    private ReportController reportController;
     private TransportController transportController;
-    private DriverController driverController;
-    private TruckController truckController;
-    private ShipmentAreaController shipmentAreaController;
     private Main main;
     private Gson gson;
 
@@ -24,18 +20,14 @@ public class NewMainTest {
     public void setUp() throws Exception {
         main = new Main();
         // Initialize controllers
-        reportController = ReportController.getInstance();
-        driverController = DriverController.getInstance();
-        truckController = TruckController.getInstance();
-        shipmentAreaController = ShipmentAreaController.getInstance();
-        transportController = TransportController.getInstance(truckController.getTruckService(), driverController.getDriverService(), reportController.getReportService(), shipmentAreaController.getShipmentAreaService());
+        transportController = TransportController.getInstance();
         gson = new Gson();
 
         // Path to the CSV file
         String filePath = "data.csv";
 
         // Initialize data from CSV file
-        CSVReader.initializeData(filePath, truckController.getTruckService(), driverController.getDriverService(), transportController.getTransportService(), reportController.getReportService(), shipmentAreaController.getShipmentAreaService());
+        CSVReader.initializeData(filePath, transportController.getTruckService(), transportController.getDriverService(), transportController.getTransportService(), transportController.getReportService(), transportController.getShipmentAreaService());
     }
 
     @Test
@@ -49,7 +41,7 @@ public class NewMainTest {
         System.setOut(new PrintStream(out));
 
         main.addDriver(new Scanner(System.in));
-        Driver driver = gson.fromJson(driverController.getDriverById(3183342456L), Driver.class);
+        Driver driver = gson.fromJson(transportController.getDriverById(3183342456L), Driver.class);
         assertNotNull(driver);
         assertEquals("Yair Tesla", driver.getDriverName());
         assertTrue(out.toString().contains("Driver added successfully."));
@@ -58,7 +50,7 @@ public class NewMainTest {
         out = new ByteArrayOutputStream();
         System.setOut(new PrintStream(out));
         main.listAllDrivers();
-        String allDriversJson = driverController.getAllDrivers();
+        String allDriversJson = transportController.getAllDrivers();
         ArrayList<Driver> allDrivers = gson.fromJson(allDriversJson, new TypeToken<ArrayList<Driver>>() {}.getType());
         assertNotNull(allDrivers);
         assertFalse(allDrivers.isEmpty());
@@ -69,7 +61,7 @@ public class NewMainTest {
         in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
         main.addTruck(new Scanner(System.in));
-        Truck truck = gson.fromJson(truckController.getTruckByLicenseNumber("XYZ789"), Truck.class);
+        Truck truck = gson.fromJson(transportController.getTruckByLicenseNumber("XYZ789"), Truck.class);
         assertNotNull(truck);
         assertEquals("ModelX", truck.getModel());
 
@@ -77,7 +69,7 @@ public class NewMainTest {
         out = new ByteArrayOutputStream();
         System.setOut(new PrintStream(out));
         main.listAllTrucks();
-        String allTrucksJson = truckController.getAllTrucks();
+        String allTrucksJson = transportController.getAllTrucks();
         ArrayList<Truck> allTrucks = gson.fromJson(allTrucksJson, new TypeToken<ArrayList<Truck>>() {}.getType());
         assertNotNull(allTrucks);
         assertFalse(allTrucks.isEmpty());
@@ -136,7 +128,7 @@ public class NewMainTest {
         in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
         main.updateDriverAvailability(new Scanner(System.in));
-        driver = gson.fromJson(driverController.getDriverById(2L), Driver.class);
+        driver = gson.fromJson(transportController.getDriverById(2L), Driver.class);
         assertNotNull(driver);
         assertFalse(driver.isAvailable());
 
@@ -145,7 +137,7 @@ public class NewMainTest {
         in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
         main.updateTruckAvailability(new Scanner(System.in));
-        truck = gson.fromJson(truckController.getTruckByLicenseNumber("DEF456"), Truck.class);
+        truck = gson.fromJson(transportController.getTruckByLicenseNumber("DEF456"), Truck.class);
         assertNotNull(truck);
         assertFalse(truck.isAvailable());
 
@@ -154,7 +146,7 @@ public class NewMainTest {
         in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
         main.getProductsReportById(new Scanner(System.in));
-        ProductsReport report = gson.fromJson(reportController.getProductsReportById(1), ProductsReport.class);
+        ProductsReport report = gson.fromJson(transportController.getProductsReportById(1), ProductsReport.class);
         assertEquals(report.toString(),"ProductsReport ID: 1\nProducts: ProductA (ID: 1, Weight: 10.5), ProductB (ID: 2, Weight: 20.0)\nWeight: 30.5\n");
 
         // Simulate getting a transport report by ID
@@ -162,7 +154,7 @@ public class NewMainTest {
         in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
         main.getTransportReportById(new Scanner(System.in));
-        TransportReport transportReport = gson.fromJson(reportController.getTransportReportById(15), TransportReport.class);
+        TransportReport transportReport = gson.fromJson(transportController.getTransportReportById(15), TransportReport.class);
         assertEquals(transportReport.toString(),"TransportReport ID: 15,Initial Weight: " + transportReport.getInitialWeight() + ",Changes Made: " + transportReport.getChangesMade());
 
         // Simulate removing a driver
@@ -170,7 +162,7 @@ public class NewMainTest {
         in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
         main.removeDriver(new Scanner(System.in));
-        driver = gson.fromJson(driverController.getDriverById(1L), Driver.class);
+        driver = gson.fromJson(transportController.getDriverById(1L), Driver.class);
         assertNull(driver);
 
         // Simulate removing a truck
@@ -178,16 +170,16 @@ public class NewMainTest {
         in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
         main.removeTruck(new Scanner(System.in));
-        truck = gson.fromJson(truckController.getTruckByLicenseNumber("ABC123"), Truck.class);
+        truck = gson.fromJson(transportController.getTruckByLicenseNumber("ABC123"), Truck.class);
         assertNull(truck);
 
         // Add a site product report for testing
         Site site = new Site("123 Main St", "John Doe", "555-1234");
         ArrayList<Product> products = new ArrayList<>();
-        products.add(new Product("ProductA", 1, 10.5));
+        products.add(new Product("ProductA", 1, 10.5,2));
         ProductsReport productsReport = new ProductsReport(products);
         SiteProductsReport siteProductsReport = new SiteProductsReport(site, productsReport);
-        reportController.addSiteProductsReport(gson.toJson(siteProductsReport));
+        transportController.addSiteProductsReport(gson.toJson(siteProductsReport));
 
         // Simulate user input for getProductReportBySite
         input = "123 Main St\n";

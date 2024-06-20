@@ -4,14 +4,20 @@ public class Product {
     private String name;
     private int id;
     private double weight;
-    public Product(String name,int id,double weight){
+    private int quantity;
+    public Product(String name,int id,double weight,int quantity){
         this.name = name;
         this.id = id;
         this.weight = weight;
+        this.quantity = quantity;
     }
 
     public String getName() {
         return name;
+    }
+
+    public int getQuantity() {
+        return quantity;
     }
 
     public int getId() {

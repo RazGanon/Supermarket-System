@@ -4,20 +4,20 @@ Area2
 Area3
 Area4
 Sites:
-123 Main St,555-1234,John Doe,ProductA,1,10.5,ProductB,2,20.0,Area1
-456 Elm St,555-5678,Jane Smith,ProductC,3,15.0,ProductD,4,25.0,Area1
-789 Oak St,555-9012,Bob Johnson,ProductE,5,30.0,Area1
-123 Origin St,555-3434,Omer Topg,ProductF,8,15.0,ProductG,9,25.0,Area1
-654 Pine St,555-3456,Chris Green,ProductJ,12,20.0,ProductK,13,18.5,Area2
-321 Maple Ave,555-4567,Lisa Blue,ProductL,14,22.5,ProductM,15,10.0,Area2
-852 Forest Ln,555-7890,Tom Black,ProductN,16,25.0,ProductO,17,30.0,Area2
-951 Beach Blvd,555-1235,Alice Brown,ProductP,18,10.0,ProductQ,19,20.0,Area3
-753 Hill St,555-2345,Michael Gray,ProductR,20,15.0,ProductS,21,25.0,Area3
-159 Ocean Dr,555-3457,Olivia Yellow,ProductT,22,5.0,ProductU,23,7.5,Area3
-357 Park Pl,555-4568,Henry Purple,ProductV,24,8.5,ProductW,25,6.0,Area3
-258 Lake Rd,555-5678,Nora Red,ProductX,26,12.0,ProductY,27,9.0,Area4
-147 Sunset Ave,555-6789,Sam Orange,ProductZ,28,3.5,ProductAA,29,4.0,Area4
-369 Vine St,555-7891,Lara Green,ProductBB,30,7.0,ProductCC,31,5.5,Area4
+123 Main St,555-1234,John Doe,ProductA,1,10.5,2,ProductB,2,20.0,3,Area1
+456 Elm St,555-5678,Jane Smith,ProductC,3,15.0,2,ProductD,4,25.0,4,Area1
+789 Oak St,555-9012,Bob Johnson,ProductE,5,30.0,1,Area1
+123 Origin St,555-3434,Omer Topg,ProductF,8,15.0,2,ProductG,9,25.0,5,Area1
+654 Pine St,555-3456,Chris Green,ProductJ,12,20.0,1,ProductK,13,18.5,3,Area2
+321 Maple Ave,555-4567,Lisa Blue,ProductL,14,22.5,6,ProductM,15,10.0,2,Area2
+852 Forest Ln,555-7890,Tom Black,ProductN,16,25.0,3,ProductO,17,30.0,8,Area2
+951 Beach Blvd,555-1235,Alice Brown,ProductP,18,10.0,4,ProductQ,19,20.0,3,Area3
+753 Hill St,555-2345,Michael Gray,ProductR,20,15.0,6,ProductS,21,25.0,7,Area3
+159 Ocean Dr,555-3457,Olivia Yellow,ProductT,22,5.0,1,ProductU,23,7.5,5,Area3
+357 Park Pl,555-4568,Henry Purple,ProductV,24,8.5,3,ProductW,25,6.0,3,Area3
+258 Lake Rd,555-5678,Nora Red,ProductX,26,12.0,4,ProductY,27,9.0,6,Area4
+147 Sunset Ave,555-6789,Sam Orange,ProductZ,28,3.5,5,ProductAA,29,4.0,1,Area4
+369 Vine St,555-7891,Lara Green,ProductBB,30,7.0,2,ProductCC,31,5.5,3,Area4
 Trucks:
 ABC123,B,ModelX,2000,5000,true
 DEF456,C,ModelY,2500,6000,true

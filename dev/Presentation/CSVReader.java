@@ -6,11 +6,8 @@ import Service.TransportService;
 import Service.TruckService;
 import Service.DriverService;
 import Service.ShipmentAreaService;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.ArrayList;
 
 public class CSVReader {
@@ -51,8 +48,8 @@ public class CSVReader {
                         String contactNumber = values[1];
                         String contactName = values[2];
                         ArrayList<Product> products = new ArrayList<>();
-                        for (int i = 3; i < values.length - 1; i += 3) {
-                            products.add(new Product(values[i], Integer.parseInt(values[i + 1]), Double.parseDouble(values[i + 2])));
+                        for (int i = 3; i < values.length - 1; i += 4) {
+                            products.add(new Product(values[i], Integer.parseInt(values[i + 1]), Double.parseDouble(values[i + 2]),Integer.parseInt(values[i+3])));
                         }
                         areaName = values[values.length - 1];
                         Site site = new Site(address, contactName, contactNumber);

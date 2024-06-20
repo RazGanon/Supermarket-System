@@ -24,7 +24,17 @@ public class TransportService {
             return "E";
         }
     }
+    //public int checkSitesValidity()
+    public double weighTruck(ArrayList<SiteProductsReport> siteProductsReports){
+        double weight = 0; // transport weight
+        for (SiteProductsReport siteProductsReport : siteProductsReports) {
+            for (Product product : siteProductsReport.getProductsReport().getProducts()) {
+                weight += product.getQuantity()*product.getWeight();
+            }
+        }
+        return weight;
 
+    }
     public Transport createTransport(TransportRequest request, TruckService t_service, DriverService d_service, ReportService reportService,ShipmentAreaService shipmentAreaService) throws InvalidDriverException, NoAvailableTruckException, TruckCantHandleWeight, NoAvailableDriver, DestinationsNotInSameAreaException {
         Truck requestedTruck = t_service.getTruckByLicenseNumber(request.getTruckLicenseNumber());
         if (requestedTruck == null) {
@@ -44,17 +54,9 @@ public class TransportService {
         if (!d_service.isValidLicense(requestedTruck.getRequiredLicense(), requestedDriver.getLicenseType())){
             throw new InvalidDriverException("Driver license cannot fit the transport track required license");
         }
-
-        double weight = 0; // transport weight
         ArrayList<SiteProductsReport> siteProductsReports = request.getSiteProductsReports();
-        for (SiteProductsReport siteProductsReport : siteProductsReports) {
-            for (Product product : siteProductsReport.getProductsReport().getProducts()) {
-                weight += product.getWeight();
-            }
-        }
-        if (!d_service.isValidLicense(licenseToWeight(weight), requestedDriver.getLicenseType()) ) {
-            throw new InvalidDriverException("Driver license cannot fit the transport weight");
-        } else if (!t_service.isTrackValid(requestedTruck,weight)) {
+        double weight = weighTruck(siteProductsReports);
+        if (requestedTruck.getMaxWeight() - requestedTruck.getNetWeight() < weight ){
             throw new TruckCantHandleWeight("Truck can't handle transport weight");
         } else {
             // Check if all destination addresses are in the same area

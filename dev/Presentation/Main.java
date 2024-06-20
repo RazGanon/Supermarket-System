@@ -9,19 +9,24 @@ import Domain.*;
 import com.google.gson.reflect.TypeToken;
 
 public class Main {
-    private static ReportController reportController = ReportController.getInstance();
-    private static DriverController driverController = DriverController.getInstance();
-    private static TruckController truckController = TruckController.getInstance();
     private static Gson gson = new Gson();
-    private static ShipmentAreaController shipmentAreaController = ShipmentAreaController.getInstance();
-    private static TransportController transportController = TransportController.getInstance(truckController.getTruckService(), driverController.getDriverService(), reportController.getReportService(),shipmentAreaController.getShipmentAreaService());
+    private static TransportController transportController = TransportController.getInstance();
 
     public static void main(String[] args) {
-        String filePath = args[0];
-        try {
-            initializeData(filePath);
-        } catch (Exception e) {
-            System.out.println("Error initializing data: " + e.getMessage());
+        if (args.length > 0) {
+            String filePath = args[0];
+            try {
+                initializeData(filePath);
+            } catch (Exception e) {
+                System.out.println("Error initializing data: " + e.getMessage());
+            }
+        } else {
+            String filePath = "data.csv";
+            try {
+                initializeData(filePath);
+            } catch (Exception e) {
+                System.out.println("Error initializing data: " + e.getMessage());
+            }
         }
         Scanner scanner = new Scanner(System.in);
         while (true) {
@@ -145,7 +150,7 @@ public class Main {
             }
 
             // Get the products report for the site
-            String siteAndProductsJson = reportController.getAllSiteProductsReports();
+            String siteAndProductsJson = transportController.getAllSiteProductsReports();
             Type listType = new TypeToken<ArrayList<SiteProductsReport>>() {}.getType();
             ArrayList<SiteProductsReport> siteProductsReports = gson.fromJson(siteAndProductsJson, listType);
 
@@ -192,7 +197,7 @@ public class Main {
         scanner.nextLine(); // Consume new line
         Driver newDriver = new Driver(licenseType, driverName, availability, driverId);
         String json = gson.toJson(newDriver);
-        String result = driverController.addDriver(json);
+        String result = transportController.addDriver(json);
         System.out.println(result);
     }
 
@@ -200,7 +205,7 @@ public class Main {
         System.out.print("Enter Driver ID To Remove: ");
         long driverId = scanner.nextLong();
         scanner.nextLine(); // Consume new line
-        String result = driverController.removeDriver(driverId);
+        String result = transportController.removeDriver(driverId);
         if (result != null) {
             System.out.println(result);
         } else {
@@ -220,7 +225,7 @@ public class Main {
             Site newSite = new Site(address, contactName, contactNumber);
             String newSiteGson = gson.toJson(newSite);
 
-            String response = shipmentAreaController.addSiteToArea(areaName, newSiteGson);
+            String response = transportController.addSiteToArea(areaName, newSiteGson);
             System.out.println(response);
         } catch (Exception e) {
             System.out.println("Error adding site: " + e.getMessage());
@@ -234,12 +239,12 @@ public class Main {
         boolean available = scanner.nextBoolean();
         scanner.nextLine(); // Consume newline
 
-        String result = driverController.setDriverAvailability(driverId, available);
+        String result = transportController.setDriverAvailability(driverId, available);
         System.out.println(result);
     }
 
     public static void listAllDrivers() {
-        String allDriversJson = driverController.getAllDrivers();
+        String allDriversJson = transportController.getAllDrivers();
         ArrayList<Driver> allDrivers = gson.fromJson(allDriversJson, new com.google.gson.reflect.TypeToken<ArrayList<Driver>>() {}.getType());
         for (Driver driver : allDrivers) {
             System.out.println(driver);
@@ -247,7 +252,7 @@ public class Main {
     }
 
     public static void listAllTrucks() {
-        String allTrucksJson = truckController.getAllTrucks();
+        String allTrucksJson = transportController.getAllTrucks();
         ArrayList<Truck> allTrucks = gson.fromJson(allTrucksJson, new com.google.gson.reflect.TypeToken<ArrayList<Truck>>() {}.getType());
         for (Truck truck : allTrucks) {
             System.out.println(truck);
@@ -269,14 +274,14 @@ public class Main {
         scanner.nextLine();
         Truck newTruck = new Truck(licenseNumber, truckModel, truckNetWeight, truckMaxWeight, requiredLicenseType);
         String json = gson.toJson(newTruck);
-        String result = truckController.addTruck(json);
+        String result = transportController.addTruck(json);
         System.out.println(result);
     }
 
     public static void removeTruck(Scanner scanner) {
         System.out.print("Enter Truck To Remove license Number: ");
         String licenseNumber = scanner.nextLine();
-        String result = truckController.removeTruck(licenseNumber);
+        String result = transportController.removeTruck(licenseNumber);
         System.out.println(result);
     }
 
@@ -287,12 +292,12 @@ public class Main {
         boolean available = scanner.nextBoolean();
         scanner.nextLine(); // Consume newline
 
-        String result = truckController.setTruckAvailability(licenseNumber, available);
+        String result =transportController.setTruckAvailability(licenseNumber, available);
         System.out.println(result);
     }
 
     public static void listAllProductsReports() {
-        String allProductsReportsJson = reportController.getAllProductsReports();
+        String allProductsReportsJson = transportController.getAllProductsReports();
         ArrayList<ProductsReport> allProductsReports = gson.fromJson(allProductsReportsJson, new com.google.gson.reflect.TypeToken<ArrayList<ProductsReport>>() {}.getType());
         for (ProductsReport report : allProductsReports) {
             System.out.println(report.toString());
@@ -339,7 +344,7 @@ public class Main {
                 if (siteName.equalsIgnoreCase("done")) {
                     break;
                 }
-                ArrayList<ShipmentArea> shipmentAreas =  shipmentAreaController.getShipmentAreaService().getShipmentAreas();
+                ArrayList<ShipmentArea> shipmentAreas =  transportController.getShipmentAreaService().getShipmentAreas();
                 for(ShipmentArea shipmentArea : shipmentAreas){
                     for (Site site : shipmentArea.getSites()){
                         if (siteName.equals(site.getAddress())){
@@ -372,7 +377,7 @@ public class Main {
             System.out.print("Enter new Site Name: ");
             String newSiteName = scanner.nextLine();
             // Get all sites in the area
-            String areas = shipmentAreaController.getAllAreas();
+            String areas = transportController.getAllAreas();
             Type listType = new TypeToken<ArrayList<ShipmentArea>>() {}.getType();
             ArrayList<ShipmentArea> shipmentAreas = gson.fromJson(areas, listType);
 
@@ -398,7 +403,7 @@ public class Main {
 
     private static void initializeData(String filePath) throws Exception {
         try {
-            CSVReader.initializeData(filePath, truckController.getTruckService(), driverController.getDriverService(), transportController.getTransportService(), reportController.getReportService(),shipmentAreaController.getShipmentAreaService());
+            CSVReader.initializeData(filePath, transportController.getTruckService(), transportController.getDriverService(), transportController.getTransportService(), transportController.getReportService(),transportController.getShipmentAreaService());
         } catch (IOException e) {
             System.out.println("Error initializing data: " + e.getMessage());
         }
@@ -408,7 +413,7 @@ public class Main {
         System.out.print("Enter Products Report ID: ");
         int productsId = scanner.nextInt();
         scanner.nextLine();
-        String result = reportController.getProductsReportById(productsId);
+        String result = transportController.getProductsReportById(productsId);
         ProductsReport productsReport = gson.fromJson(result,ProductsReport.class);
         if (result == null) {
             System.out.print("No Products Report Matches this Id\n");
@@ -421,7 +426,7 @@ public class Main {
         System.out.print("Enter Transport Report ID: ");
         int transportId = scanner.nextInt();
         scanner.nextLine();
-        String result = reportController.getTransportReportById(transportId);
+        String result = transportController.getTransportReportById(transportId);
         if (result == null) {
             System.out.print("No Transport Report Matches this Id\n");
         } else {
@@ -432,7 +437,7 @@ public class Main {
     public static void getProductReportBySite(Scanner scanner){
         System.out.print("Enter Site Address: ");
         String siteName = scanner.nextLine();
-        String sitesAndProducts = reportController.getAllSiteProductsReports();
+        String sitesAndProducts = transportController.getAllSiteProductsReports();
         Type listType = new TypeToken<ArrayList<SiteProductsReport>>() {}.getType();
         ArrayList<SiteProductsReport> sitesAndProductsReports = gson.fromJson(sitesAndProducts, listType);
         for (SiteProductsReport siteProductsReport : sitesAndProductsReports){
@@ -446,7 +451,7 @@ public class Main {
         String areaName = scanner.nextLine();
         System.out.print("Enter Site Address: ");
         String address = scanner.nextLine();
-        String response = shipmentAreaController.removeSiteFromArea(areaName, address);
+        String response = transportController.removeSiteFromArea(areaName, address);
         System.out.println(response);
     }
 

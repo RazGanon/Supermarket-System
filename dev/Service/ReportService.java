@@ -55,7 +55,6 @@ public class ReportService {
         return transportReports;
     }
 
-    // Methods for SiteProductsReport
     public void addSiteProductsReport(SiteProductsReport report) {
         siteProductsReports.add(report);
     }
