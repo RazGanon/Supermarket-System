@@ -1,5 +1,7 @@
 package Domain;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Employee {
     private String fName; //first name of employee
@@ -11,6 +13,7 @@ public class Employee {
     private Role role ;
     private String password;
     private Constraints empcons;
+    private List<Schedule> pastSchedules;
 
     // constructors / standard setters / getters
     public Employee (String empfName, String emplName, String empId, int empSalary, terms empTerms, SuperMarket empSuperMarketBranch) {
@@ -21,6 +24,8 @@ public class Employee {
         terms=empTerms;
         SuperMarketBranch=empSuperMarketBranch;
         role= Role.Employee; // by default
+        this.pastSchedules = new ArrayList<>();
+
 
     }
     public void setFname (String ifName){
@@ -64,6 +69,12 @@ public class Employee {
     }
     public String getPassword() {
         return this.password;
+    }
+    public List<Schedule> getPastSchedules() {
+        return pastSchedules;
+    }
+    public void addSchedule(Schedule schedule) {
+        this.pastSchedules.add(schedule);
     }
 }
 
