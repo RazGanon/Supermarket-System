@@ -18,6 +18,24 @@ public class Main {
     private static Employee employeeToCheck = null;
 
     public static void main(String[] args) {
+
+
+        Scanner scannerr = new Scanner(System.in);
+
+        System.out.print("Do you want to load data from the CSV file? (yes/no): ");
+        String useCsv = scannerr.nextLine();
+
+        if (useCsv.equalsIgnoreCase("yes")) {
+            try {
+                scheduleService = new ScheduleService("Store1", LocalDate.now(), LocalTime.of(8, 0), LocalTime.of(12, 0), LocalTime.of(13, 0), LocalTime.of(17, 0), new SuperMarket("Location", "Manager"), employeeManagement);
+                constraintsController = new ConstraintsController(constraintManagement, scheduleService);
+                csvReader.initializeData("resources/data.csv", constraintManagement, employeeManagement,  scheduleService);
+            } catch (Exception e) {
+                System.out.println("Error initializing data: " + e.getMessage());
+            }
+        }
+        /*
+
         try {
             scheduleService = new ScheduleService("Store1", LocalDate.now(), LocalTime.of(8, 0), LocalTime.of(12, 0), LocalTime.of(13, 0), LocalTime.of(17, 0), new SuperMarket("Location", "Manager"), employeeManagement);
             constraintsController = new ConstraintsController(constraintManagement, scheduleService);
@@ -25,6 +43,8 @@ public class Main {
         } catch (Exception e) {
             System.out.println("Error initializing data: " + e.getMessage());
         }
+
+         */
 
         Scanner scanner = new Scanner(System.in);
         while (true) {
