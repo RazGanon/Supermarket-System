@@ -1,9 +1,7 @@
 package Presentation;
 
 import Domain.*;
-import Service.ConstraintsService;
-import Service.EmployeeService;
-import Service.ScheduleService;
+//import Service.ConstraintsService;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -12,7 +10,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class csvReader {
-    public static void initializeData(String filePath, ConstraintsService constraintsService, EmployeeService employeeService,  ScheduleService scheduleService) {
+    public static void initializeData(String filePath,  EmployeeController employeeController,  ScheduleController scheduleController) {
         // Reading the CSV file
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
@@ -56,7 +54,7 @@ public class csvReader {
 
                         // Create an employee and add to the list
                         Employee employee;
-                        employee = employeeService.registerEmployeeAuto(fname, lname, id, salary, t, superMarket,password,r);
+                        employee = employeeController.registerEmployeeAuto(fname, lname, id, salary, t, superMarket,password,r);
                         //employee.setPassword(password);
 
                         employees.add(employee);

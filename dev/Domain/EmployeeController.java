@@ -1,4 +1,4 @@
-package Service;
+package Domain;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -9,9 +9,11 @@ import Domain.Role;
 import Domain.SuperMarket;
 import Domain.terms;
 
-public class EmployeeService {
+public class EmployeeController {
     static int numberOfSuperMarket = 0;
+    //this map contains id,employee object
     private Map<String, Employee> employeeMap = new HashMap<>();
+    //this map contain adrress of supermarket, supermarket object
     private Map<String, SuperMarket> supermarketsMap = new HashMap<>();
 
     // Method to register an employee

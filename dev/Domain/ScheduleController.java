@@ -1,4 +1,4 @@
-package Service;
+package Domain;
 
 import Domain.Constraints;
 import Domain.Employee;
@@ -9,9 +9,8 @@ import Domain.SuperMarket;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
-
-public class ScheduleService {
-    private EmployeeService employeeManagement;
+public class ScheduleController {
+    private EmployeeController employeeManagement;
     private final String location;
     private final LocalDate startDate;
     private final LocalTime morningStart;
@@ -21,7 +20,7 @@ public class ScheduleService {
     private final SuperMarket superMarket;
     private final Map<Integer, ShiftRules> shiftRequirements = new HashMap<>();
 
-    public ScheduleService(String location, LocalDate startDate, LocalTime morningStart, LocalTime morningEnd, LocalTime eveningStart, LocalTime eveningEnd, SuperMarket superMarket, EmployeeService employeeManagement) {
+    public ScheduleController(String location, LocalDate startDate, LocalTime morningStart, LocalTime morningEnd, LocalTime eveningStart, LocalTime eveningEnd, SuperMarket superMarket, EmployeeController employeeManagement) {
         this.location = location;
         this.startDate = startDate;
         this.morningStart = morningStart;

@@ -1,17 +1,22 @@
 package Presentation;
+
 import Domain.*;
-import Service.*;
+//import Service.ConstraintsService;
+import Domain.EmployeeController;
+import Domain.ScheduleController;
+//import Service.UserService;
 import com.google.gson.Gson;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
 
 public class Main {
-    private static final EmployeeService employeeManagement = new EmployeeService();
-    private static final UserService userManagement = new UserService();
+    private static final EmployeeController employeeManagement = new EmployeeController();
+    //private static final UserService userManagement = new UserService();
     private static final Gson gson = new Gson();
-    private static final ConstraintsService constraintManagement = new ConstraintsService();
-    static ScheduleService scheduleService;
+    //private static final ConstraintsService constraintManagement = new ConstraintsService();
+    static ScheduleController scheduleController;
     //private static final WorkArrangementService workarrManagement = new WorkArrangementService();
     private static ConstraintsController constraintsController;
     private static String user_id;
@@ -27,9 +32,9 @@ public class Main {
 
         if (useCsv.equalsIgnoreCase("yes")) {
             try {
-                scheduleService = new ScheduleService("Store1", LocalDate.now(), LocalTime.of(8, 0), LocalTime.of(12, 0), LocalTime.of(13, 0), LocalTime.of(17, 0), new SuperMarket("Location", "Manager"), employeeManagement);
-                constraintsController = new ConstraintsController(constraintManagement, scheduleService);
-                csvReader.initializeData("resources/data.csv", constraintManagement, employeeManagement,  scheduleService);
+                scheduleController = new ScheduleController("Store1", LocalDate.now(), LocalTime.of(8, 0), LocalTime.of(12, 0), LocalTime.of(13, 0), LocalTime.of(17, 0), new SuperMarket("Location", "Manager"), employeeManagement);
+                constraintsController = new ConstraintsController(scheduleController);
+                csvReader.initializeData("resources/data.csv", employeeManagement,  scheduleController);
             } catch (Exception e) {
                 System.out.println("Error initializing data: " + e.getMessage());
             }
@@ -37,9 +42,9 @@ public class Main {
         /*
 
         try {
-            scheduleService = new ScheduleService("Store1", LocalDate.now(), LocalTime.of(8, 0), LocalTime.of(12, 0), LocalTime.of(13, 0), LocalTime.of(17, 0), new SuperMarket("Location", "Manager"), employeeManagement);
-            constraintsController = new ConstraintsController(constraintManagement, scheduleService);
-            csvReader.initializeData("resources/data.csv", constraintManagement, employeeManagement,  scheduleService);
+            scheduleController = new ScheduleController("Store1", LocalDate.now(), LocalTime.of(8, 0), LocalTime.of(12, 0), LocalTime.of(13, 0), LocalTime.of(17, 0), new SuperMarket("Location", "Manager"), employeeManagement);
+            constraintsController = new ConstraintsController( scheduleController);
+            csvReader.initializeData("resources/data.csv", employeeManagement,  scheduleController);
         } catch (Exception e) {
             System.out.println("Error initializing data: " + e.getMessage());
         }
@@ -74,7 +79,7 @@ public class Main {
     }
 
     private static void watchCurrentSchedule() {
-        String currentSchedule = scheduleService.getCurrentSchedule();
+        String currentSchedule = scheduleController.getCurrentSchedule();
         System.out.println(currentSchedule);
     }
 
@@ -310,7 +315,7 @@ public class Main {
                     checkEmployeeRole();
                     break;
                 case 6:
-                    constraintsController.StartSubmission();
+                    constraintsController.startSubmission();
                     break;
                 case 7:
                     constraintsController.stopSubmission();

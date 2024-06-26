@@ -16,15 +16,9 @@ public class Schedule {
         return date;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
 
     public List<Shift> getShifts() {
         return shifts;
     }
 
-    public void setShifts(List<Shift> shifts) {
-        this.shifts = shifts;
-    }
 }
