@@ -1,11 +1,4 @@
 package Domain;
-
-import Domain.Constraints;
-import Domain.Employee;
-import Domain.Role;
-import Domain.ShiftRules;
-import Domain.SuperMarket;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
@@ -19,6 +12,12 @@ public class ScheduleController {
     private final LocalTime eveningEnd;
     private final SuperMarket superMarket;
     private final Map<Integer, ShiftRules> shiftRequirements = new HashMap<>();
+    static int newestSchedule = 0;
+    //Schedule base is map that save all the schedules that was generated in the system
+    //there is a flag that called newestSchedule with this flag we know who is the newest schedule
+    //in the system .
+    private final Map<Integer, StringBuilder> ScheduleBase = new HashMap<>();
+
 
     public ScheduleController(String location, LocalDate startDate, LocalTime morningStart, LocalTime morningEnd, LocalTime eveningStart, LocalTime eveningEnd, SuperMarket superMarket, EmployeeController employeeManagement) {
         this.location = location;
@@ -51,6 +50,8 @@ public class ScheduleController {
             schedule.append("  Evening Shift: ").append(assignShift(day, 1, requirements.getEveningManagerCount(), requirements.getEveningEmployeeCount(), constraints)).append("\n");
         }
 
+        newestSchedule++;
+        ScheduleBase.put(newestSchedule, schedule);
         return schedule.toString();
     }
 
@@ -82,8 +83,13 @@ public class ScheduleController {
 
 
     public String getCurrentSchedule() {
-        // Implement the logic to get the current schedule
-        return "Current schedule not implemented yet.";
+        if (!ScheduleBase.isEmpty()) {
+            return ScheduleBase.get(newestSchedule).toString();
+        }
+            return "Current schedule not implemented yet.";
+
+        }
     }
-}
+
+
 

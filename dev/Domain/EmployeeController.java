@@ -4,10 +4,6 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import Domain.Employee;
-import Domain.Role;
-import Domain.SuperMarket;
-import Domain.terms;
 
 public class EmployeeController {
     static int numberOfSuperMarket = 0;
@@ -131,5 +127,7 @@ public class EmployeeController {
         if (employee != null) {
             employee.setSuperMarket(newSuperMarket);
         }
+
     }
+
 }

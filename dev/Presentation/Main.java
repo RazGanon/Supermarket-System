@@ -1,30 +1,20 @@
 package Presentation;
-
 import Domain.*;
-//import Service.ConstraintsService;
 import Domain.EmployeeController;
 import Domain.ScheduleController;
-//import Service.UserService;
 import com.google.gson.Gson;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
 
 public class Main {
     private static final EmployeeController employeeManagement = new EmployeeController();
-    //private static final UserService userManagement = new UserService();
     private static final Gson gson = new Gson();
-    //private static final ConstraintsService constraintManagement = new ConstraintsService();
     static ScheduleController scheduleController;
-    //private static final WorkArrangementService workarrManagement = new WorkArrangementService();
     private static ConstraintsController constraintsController;
     private static String user_id;
     private static Employee employeeToCheck = null;
-
     public static void main(String[] args) {
-
-
         Scanner scannerr = new Scanner(System.in);
 
         System.out.print("Do you want to load data from the CSV file? (yes/no): ");
@@ -39,17 +29,7 @@ public class Main {
                 System.out.println("Error initializing data: " + e.getMessage());
             }
         }
-        /*
 
-        try {
-            scheduleController = new ScheduleController("Store1", LocalDate.now(), LocalTime.of(8, 0), LocalTime.of(12, 0), LocalTime.of(13, 0), LocalTime.of(17, 0), new SuperMarket("Location", "Manager"), employeeManagement);
-            constraintsController = new ConstraintsController( scheduleController);
-            csvReader.initializeData("resources/data.csv", employeeManagement,  scheduleController);
-        } catch (Exception e) {
-            System.out.println("Error initializing data: " + e.getMessage());
-        }
-
-         */
 
         Scanner scanner = new Scanner(System.in);
         while (true) {
@@ -245,25 +225,25 @@ public class Main {
             }
         }
     }
-    private static void addAndRetrieveSchedules(Employee employee) {
-        Shift shift1 = new Shift("Morning", "08:00", "16:00");
-        Shift shift2 = new Shift("Evening", "16:00", "00:00");
-
-        Schedule schedule1 = new Schedule(LocalDate.now(), Arrays.asList(shift1, shift2));
-        Schedule schedule2 = new Schedule(LocalDate.now().minusDays(1), Arrays.asList(shift1));
-
-        employee.addSchedule(schedule1);
-        employee.addSchedule(schedule2);
-
-        List<Schedule> pastSchedules = employee.getPastSchedules();
-        System.out.println("Past schedules for employee " + employee.getFname() + " " + employee.getLname() + ":");
-        for (Schedule schedule : pastSchedules) {
-            System.out.println("Date: " + schedule.getDate());
-            for (Shift shift : schedule.getShifts()) {
-                System.out.println("  Shift: " + shift.getShiftType() + " from " + shift.getStartTime() + " to " + shift.getEndTime());
-            }
-        }
-    }
+//    private static void addAndRetrieveSchedules(Employee employee) {
+//        Shift shift1 = new Shift("Morning", "08:00", "16:00");
+//        Shift shift2 = new Shift("Evening", "16:00", "00:00");
+//
+//        Schedule schedule1 = new Schedule(LocalDate.now(), Arrays.asList(shift1, shift2));
+//        Schedule schedule2 = new Schedule(LocalDate.now().minusDays(1), Arrays.asList(shift1));
+//
+//        employee.addSchedule(schedule1);
+//        employee.addSchedule(schedule2);
+//
+//        List<Schedule> pastSchedules = employee.getPastSchedules();
+//        System.out.println("Past schedules for employee " + employee.getFname() + " " + employee.getLname() + ":");
+//        for (Schedule schedule : pastSchedules) {
+//            System.out.println("Date: " + schedule.getDate());
+//            for (Shift shift : schedule.getShifts()) {
+//                System.out.println("  Shift: " + shift.getShiftType() + " from " + shift.getStartTime() + " to " + shift.getEndTime());
+//            }
+//        }
+//    }
     private static void showPastSchedulesForEmployee(Employee employee) {
         List<Schedule> pastSchedules = employee.getPastSchedules();
         if (pastSchedules.isEmpty()) {

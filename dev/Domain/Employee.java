@@ -14,6 +14,7 @@ public class Employee {
     private String password;
     private Constraints empcons;
     private List<Schedule> pastSchedules;
+    private StringBuilder MySchedule;
 
     // constructors / standard setters / getters
     public Employee (String empfName, String emplName, String empId, int empSalary, terms empTerms, SuperMarket empSuperMarketBranch) {
@@ -28,6 +29,7 @@ public class Employee {
 
 
     }
+
     public void setFname (String ifName){
         fName=ifName;
     }

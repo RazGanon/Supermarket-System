@@ -1,7 +1,6 @@
 package Domain;
 import java.util.*;
 public class ConstraintsController {
-    //private final ConstraintsService constraintsService;
     private final Map<String, Constraints> constraintsMap = new HashMap<>();
     //this set contains for each Morning Shift - Who is work by ID
     private final Set<String>[] employeeForShiftsMorning = new HashSet[6];
