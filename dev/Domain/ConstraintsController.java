@@ -122,7 +122,7 @@ public class ConstraintsController {
         String schedule = scheduleController.generateWeeklySchedule(getAllConstraints());
         System.out.println(schedule);
     }
-        public Map<String, Constraints> getAllConstraints() {
+    public Map<String, Constraints> getAllConstraints() {
         return constraintsMap;
     }
     public Constraints getMatrixFromID(String id) {
@@ -145,7 +145,7 @@ public class ConstraintsController {
     public void printListEmpl() {
         System.out.println("\nThe Map Contains constraints: \n\n" + constraintsMap);
     }
-        public void printConstraintsForEmployee(String employeeId) {
+    public void printConstraintsForEmployee(String employeeId) {
         Constraints constraints = constraintsMap.get(employeeId);
         if (constraints != null) {
             System.out.println("Constraints for employee ID: " + employeeId);

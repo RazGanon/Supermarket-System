@@ -1,4 +1,4 @@
-package Dao;
+package Data;
 
 public class ConstraintsDao {
 }

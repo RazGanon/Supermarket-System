@@ -7,10 +7,13 @@ public class SuperMarket {
     private String address;
     private String managerName;
     private static List<SuperMarket> superMarkets = new ArrayList<>();
-
+     static int superid=0 ;
     public SuperMarket(String address, String managerName) {
         this.address = address;
         this.managerName = managerName;
+        superid =superid;
+        superid++;
+
     }
 
     @Override
@@ -56,5 +59,20 @@ public class SuperMarket {
 
     public String getAddress() {
         return this.address;
+    }
+    public String getManagerName(){
+        return this.managerName;
+    }
+
+    public int getId() {
+        return superid;
+    }
+
+    public void setAddress(String newAddress) {
+        this.address = address;
+    }
+
+    public void setManagerName(String newManagerName) {
+        this.managerName=managerName;
     }
 }

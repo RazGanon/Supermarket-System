@@ -25,7 +25,7 @@ public class Employee {
         terms=empTerms;
         SuperMarketBranch=empSuperMarketBranch;
         role= Role.Employee; // by default
-        this.pastSchedules = new ArrayList<>();
+        //this.pastSchedules = new ArrayList<>();
 
 
     }

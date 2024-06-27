@@ -15,8 +15,7 @@ public class csvReader {
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
             String section = "";
-            // List of employees
-            ArrayList<Employee> employees = new ArrayList<>();
+
             // While the next line is not null, continue looping
             while ((line = br.readLine()) != null) {
                 // When you get to the line that has "Employees:", set section to "Emp"
@@ -55,9 +54,7 @@ public class csvReader {
                         // Create an employee and add to the list
                         Employee employee;
                         employee = employeeController.registerEmployeeAuto(fname, lname, id, salary, t, superMarket,password,r);
-                        //employee.setPassword(password);
-
-                        employees.add(employee);
+                        EmployeeController.addEmployeeToSystem(employee);
                         break;
                     case "Sm":
                         // Parse the supermarket details

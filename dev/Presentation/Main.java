@@ -202,7 +202,7 @@ public class Main {
         employeeManagement.getRoleEmployeeById(idChoice);}
 
 
-        private static void checkConstraints(Scanner scanner) {
+    private static void checkConstraints(Scanner scanner) {
         System.out.print("Enter employee ID: ");
         String idChoice = scanner.nextLine();
         Employee e = employeeManagement.getEmployeeById(idChoice);
@@ -225,7 +225,7 @@ public class Main {
             }
         }
     }
-//    private static void addAndRetrieveSchedules(Employee employee) {
+    //    private static void addAndRetrieveSchedules(Employee employee) {
 //        Shift shift1 = new Shift("Morning", "08:00", "16:00");
 //        Shift shift2 = new Shift("Evening", "16:00", "00:00");
 //
@@ -346,8 +346,8 @@ public class Main {
                     constraintsController.printConstraintsForEmployee(employeeToCheck.getId());
                     break;
                 case 4:
-                Role r = employeeManagement.getRoleEmployeeById(employeeToCheck.getId());
-                break;
+                    Role r = employeeManagement.getRoleEmployeeById(employeeToCheck.getId());
+                    break;
                 case 5:
                     showPastSchedulesForEmployee(employeeToCheck);
                     break;

@@ -8,10 +8,11 @@ import java.util.stream.Collectors;
 public class EmployeeController {
     static int numberOfSuperMarket = 0;
     //this map contains id,employee object
-    private Map<String, Employee> employeeMap = new HashMap<>();
+    private static Map<String, Employee> employeeMap = new HashMap<>();
     //this map contain adrress of supermarket, supermarket object
     private Map<String, SuperMarket> supermarketsMap = new HashMap<>();
-
+    // List of employees
+    static ArrayList<Employee> employees = new ArrayList<>();
     // Method to register an employee
 
     // here i build two register employee function -- one of them is when the admin want to add employee manually and than he need to
@@ -29,12 +30,14 @@ public class EmployeeController {
 
         Employee newEmployee = new Employee(fName, lName, id, salary, terms, superMarketBranch);
         try {
-            employeeMap.put(newEmployee.getId(), newEmployee);
+            addEmployeeToSystem(newEmployee);
+            //employeeMap.put(newEmployee.getId(), newEmployee);
             System.out.println("Ask the employee what password they want: ");
             Scanner scanner = new Scanner(System.in);
             String newEmpPassword = scanner.nextLine();
             newEmployee.setPassword(newEmpPassword); // employee chose password and we added it to his info
             System.out.println("Employee registered successfully: " + newEmployee);
+
             return newEmployee;
         } catch (Exception e) {
             e.printStackTrace();
@@ -75,7 +78,7 @@ public class EmployeeController {
         return !employeeMap.containsKey(id);
     }
 
-    public Employee getEmployeeById(String id) {
+    public static Employee getEmployeeById(String id) {
         if (!employeeMap.containsKey(id)) {
             System.out.println("Employee with ID: " + id + " does not exist.");
             return null; // if employee is not in the system
@@ -91,9 +94,6 @@ public class EmployeeController {
         R = employeeMap.get(id).getRole();
         System.out.println(R);
         return R;
-    }
-    public terms setTerms(LocalDate startdate, String jobtype, String wage, String daysoff) {
-        return new terms(startdate, jobtype, daysoff);
     }
 
     public SuperMarket addSupermarket(String address, String managerName) {
@@ -126,6 +126,14 @@ public class EmployeeController {
         Employee employee = employeeMap.get(employeeId);
         if (employee != null) {
             employee.setSuperMarket(newSuperMarket);
+        }
+
+
+    }
+    public static void addEmployeeToSystem(Employee employee){
+        if (employee!= null){
+            employees.add(employee); // added to the main list of employees
+            employeeMap.put(employee.getId(),employee); // added to the map of employees for fast find emp by id
         }
 
     }

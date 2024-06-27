@@ -86,10 +86,7 @@ public class ScheduleController {
         if (!ScheduleBase.isEmpty()) {
             return ScheduleBase.get(newestSchedule).toString();
         }
-            return "Current schedule not implemented yet.";
+        return "Current schedule not implemented yet.";
 
-        }
     }
-
-
-
+}

@@ -17,4 +17,16 @@ public class terms {
         this.startDate=startDate;
 
     }
+
+    public LocalDate getStartdate() {
+        return this.startDate;
+    }
+
+    public String getJobType() {
+        return this.JobType;
+    }
+
+    public String getDaysoff() {
+        return this.daysOff;
+    }
 }
