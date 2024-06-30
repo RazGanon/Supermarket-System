@@ -62,7 +62,8 @@ public class EmployeeController {
 
         Employee newEmployee = new Employee(fName, lName, id, salary, terms, superMarketBranch);
         try {
-            employeeMap.put(newEmployee.getId(), newEmployee);
+            //employeeMap.put(newEmployee.getId(), newEmployee);
+            addEmployeeToSystem(newEmployee);
             newEmployee.setPassword(password); // employee chose password and we added it to his info
             newEmployee.setRole(r);
             //System.out.println("Employee registered successfully: " + newEmployee);
