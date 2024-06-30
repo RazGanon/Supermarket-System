@@ -1,8 +1,6 @@
 package Presentation;
 
 import Domain.*;
-//import Service.ConstraintsService;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -54,7 +52,7 @@ public class csvReader {
                         // Create an employee and add to the list
                         Employee employee;
                         employee = employeeController.registerEmployeeAuto(fname, lname, id, salary, t, superMarket,password,r);
-                        EmployeeController.addEmployeeToSystem(employee);
+                        //EmployeeController.addEmployeeToSystem(employee);
                         break;
                     case "Sm":
                         // Parse the supermarket details
