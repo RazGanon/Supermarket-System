@@ -1,12 +1,8 @@
 package Domain;
-
 import Data.EmployeeDao;
-
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
-
-
 public class EmployeeController {
     static int numberOfSuperMarket = 0;
     //this map contains id,employee object

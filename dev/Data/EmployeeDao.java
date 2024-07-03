@@ -40,11 +40,11 @@ public class EmployeeDao {
                 String lname = rs.getString("lname");
                 String id = rs.getString("id");
                 int salary = rs.getInt("salary");
-                LocalDate startdate = rs.getDate("hire_date").toLocalDate();
-                String jobType = rs.getString("jobType");
+                String startdate = rs.getString("hire_date");
+                String jobType = rs.getString("Job");
                 String daysoff = rs.getString("days_off");
                 Role role = Role.valueOf(rs.getString("role"));
-                int superMarketId = rs.getInt("super_market_id");
+                //int superMarketId = rs.getInt("super_market_id");
 
                 SuperMarket superMarket = SuperMarketDao.getInstance().getSuperMarket(superMarketId);
                 terms t = new terms(startdate, jobType, daysoff);
@@ -78,7 +78,7 @@ public class EmployeeDao {
                 String lname = rs.getString("lname");
                 String id_new = rs.getString("id");
                 int salary = rs.getInt("salary");
-                LocalDate startdate = rs.getDate("hire_date").toLocalDate();
+                String startdate = rs.getString("hire_date");
                 String jobType = rs.getString("jobType");
                 String daysoff = rs.getString("days_off");
                 Role role = Role.valueOf(rs.getString("role"));

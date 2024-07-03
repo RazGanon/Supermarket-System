@@ -110,7 +110,8 @@ public class Main {
             }
         }
         LocalDate date = LocalDate.now();
-        terms newTerms = new terms(date, jobType,dayOff);
+        String sdate = date.toString();
+        terms newTerms = new terms(sdate, jobType,dayOff);
 
         // Assuming registerEmployeeManually takes these parameters
         employeeManagement.registerEmployeeManually(firstName, lastName, id, salary,newTerms,chosenSuperMarket);
