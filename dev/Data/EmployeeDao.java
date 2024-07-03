@@ -36,19 +36,22 @@ public class EmployeeDao {
             PreparedStatement statement = conn.prepareStatement("SELECT * FROM Employee");
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                String fname = rs.getString("fname");
+                String id = rs.getString("ID");
+                String fname = rs.getString("Fname");
                 String lname = rs.getString("lname");
-                String id = rs.getString("id");
                 int salary = rs.getInt("salary");
-                String startdate = rs.getString("hire_date");
                 String jobType = rs.getString("Job");
+                String superMarketAddress = rs.getString("Address");
+                String ManagerName = rs.getString("Manager_Name");
+                String startdate = rs.getString("hire_date");
                 String daysoff = rs.getString("days_off");
                 Role role = Role.valueOf(rs.getString("role"));
-                //int superMarketId = rs.getInt("super_market_id");
+                String password = rs.getString("password");
 
-                SuperMarket superMarket = SuperMarketDao.getInstance().getSuperMarket(superMarketId);
+                SuperMarket superMarket = SuperMarketDao.getInstance().getSuperMarketByAddress(superMarketAddress);
                 terms t = new terms(startdate, jobType, daysoff);
-                Employee employee = new Employee(id, fname, lname, salary, t, superMarket);
+                Employee employee = new Employee( fname, lname,id, salary, t, superMarket);
+                employee.setPassword(password);
                 employee.setRole(role);
 
                 EmployeeController.addEmployeeToSystem(employee);
@@ -82,9 +85,9 @@ public class EmployeeDao {
                 String jobType = rs.getString("jobType");
                 String daysoff = rs.getString("days_off");
                 Role role = Role.valueOf(rs.getString("role"));
-                int superMarketId = rs.getInt("super_market_id");
+                String superMarketAddress = rs.getString("Address");
 
-                SuperMarket superMarket = SuperMarketDao.getInstance().getSuperMarket(superMarketId);
+                SuperMarket superMarket = SuperMarketDao.getInstance().getSuperMarketByAddress(superMarketAddress);
                 terms t = new terms(startdate, jobType, daysoff);
                 emp = new Employee(id_new, fname, lname, salary, t, superMarket);
                 emp.setRole(role);
