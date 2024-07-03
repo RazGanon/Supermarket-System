@@ -85,7 +85,7 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" exported="" name="gson-2.8.5" level="project" />
+    <orderEntry type="library" name="gson-2.8.5" level="project" />
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
@@ -108,6 +108,15 @@
       <library>
         <CLASSES>
           <root url="jar://$USER_HOME$/Downloads/slf4j-simple-1.7.32.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/devop/projects/ADSS-AR/DB/gson-2.8.5.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
