@@ -28,6 +28,10 @@ public class Product {
         this.name = name;
     }
 
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
     public void setId(int id) {
         this.id = id;
     }
@@ -43,4 +47,5 @@ public class Product {
     public double getWeight() {
         return weight;
     }
+
 }

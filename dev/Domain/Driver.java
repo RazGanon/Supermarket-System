@@ -4,15 +4,15 @@ public class Driver {
     private String licenseType;
     private String driverName;
     private boolean available;
-    private long id;
-    public Driver(String licenseType, String driverName, boolean available,long id) {
+    private int id;
+    public Driver(String licenseType, String driverName, boolean available,int id) {
         this.licenseType = licenseType;
         this.driverName = driverName;
         this.available = available;
         this.id = id;
 
     }
-    public long getId(){
+    public int getId(){
         return this.id;
     }
     public void setLicenseType(String licenseType) {

@@ -7,21 +7,23 @@ public class Transport {
     private Driver driver;
     private Site originAddress;
     private ArrayList<Site> destinations;
-    private ArrayList<SiteProductsReport> siteAndProducts;
     private String requestedTime;
     private String requestDay;
     private TransportReport transportReport;
 
-    public Transport(Truck truck, Driver driver, Site originAddress, TransportReport transportReport, String requestedTime, String requestDay, ArrayList<SiteProductsReport> siteAndProducts,ArrayList<Site> dest) {
+
+    public Transport(Truck truck, Driver driver, Site originAddress, String requestedTime, String requestDay, ArrayList<Site> destinations, TransportReport transportReport) {
         this.truck = truck;
         this.driver = driver;
         this.originAddress = originAddress;
-        this.transportReport = transportReport;
         this.requestedTime = requestedTime;
         this.requestDay = requestDay;
-        this.siteAndProducts = siteAndProducts;
-        this.destinations = dest;
+        this.destinations = destinations;
+        this.transportReport = transportReport;
+
     }
+
+
 
     // Getters and Setters
     public int getTransportId() {
@@ -48,10 +50,6 @@ public class Transport {
         return destinations;
     }
 
-    public ArrayList<SiteProductsReport> getSiteAndProducts() {
-        return siteAndProducts;
-    }
-
     public String getRequestedTime() {
         return requestedTime;
     }
@@ -60,7 +58,16 @@ public class Transport {
         return requestDay;
     }
 
-    public TransportReport getTsp() {
+    public void setDestinations(ArrayList<Site> destinations) {
+        this.destinations = destinations;
+    }
+
+    public TransportReport getTransportReport() {
         return transportReport;
     }
+
+    public void setTransportReport(TransportReport transportReport) {
+        this.transportReport = transportReport;
+    }
+
 }

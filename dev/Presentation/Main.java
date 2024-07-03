@@ -1,33 +1,19 @@
 package Presentation;
-
 import com.google.gson.Gson;
-import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Scanner;
 import Domain.*;
-import com.google.gson.reflect.TypeToken;
 
 public class Main {
     private static Gson gson = new Gson();
-    private static TransportController transportController = TransportController.getInstance();
+    private static MainController mainController;
+
+    public Main(){
+        mainController = MainController.getInstance();
+    }
 
     public static void main(String[] args) {
-        if (args.length > 0) {
-            String filePath = args[0];
-            try {
-                initializeData(filePath);
-            } catch (Exception e) {
-                System.out.println("Error initializing data: " + e.getMessage());
-            }
-        } else {
-            String filePath = "data.csv";
-            try {
-                initializeData(filePath);
-            } catch (Exception e) {
-                System.out.println("Error initializing data: " + e.getMessage());
-            }
-        }
+        new Main();
         Scanner scanner = new Scanner(System.in);
         while (true) {
             showMenu();
@@ -62,40 +48,26 @@ public class Main {
                     updateTruckAvailability(scanner);
                     break;
                 case 10:
-                    listAllProductsReports();
-                    break;
-                case 11:
                     listAllTransports();
                     break;
-                case 12:
-                    changeTransportTruck(scanner);
-                    break;
-                case 13:
-                    removeDestinations(scanner);
-                    break;
-                case 14:
-                    changeDestination(scanner);
-                    break;
-                case 15:
-                    getProductsReportById(scanner);
-                    break;
-                case 16:
+                case 11:
                     getTransportReportById(scanner);
                     break;
-                case 17:
-                    getProductReportBySite(scanner);
-                    break;
-                case 18:
+                case 12:
                     addSiteToShipmentArea(scanner);
                     break;
-                case 19:
+                case 13:
                     removeSiteFromShipmentArea(scanner);
                     break;
-                case 20:
+                case 14:
+                    addShipmentArea(scanner);
+                    break;
+                case 15:
+                    listSiteProductsByTransportId(scanner);
+                    break;
+                case 16:
                     System.out.println("Exiting...");
                     return;
-                default:
-                    System.out.println("Invalid choice. Please try again.");
             }
         }
     }
@@ -111,20 +83,27 @@ public class Main {
         System.out.println("7. Add Truck");
         System.out.println("8. Remove Truck");
         System.out.println("9. Update Truck Availability");
-        System.out.println("10. List All Products Reports");
-        System.out.println("11. List All Transports");
-        System.out.println("12. Change Transport Truck");
-        System.out.println("13. Remove Destinations");
-        System.out.println("14. Change Destination");
-        System.out.println("15. Get Products Report By Id");
-        System.out.println("16. Get Transport Report By Id");
-        System.out.println("17. Get Product Report By Site");
-        System.out.println("18. Add Site To Selected Shipment Area");
-        System.out.println("19. Remove Site From Selected Shipment Area");
-        System.out.println("20. Exit");
-        System.out.print("Enter your choice: ");
+        System.out.println("10. List All Transports");
+        System.out.println("11. Get Transport Report By Id");
+        System.out.println("12. Add Site To Selected Shipment Area");
+        System.out.println("13. Remove Site From Selected Shipment Area");
+        System.out.println("14. Add Shipment Area");
+        System.out.println("15. List Site Products By Transport ID");
+        System.out.println("16. Exit");
+        System.out.println("Enter your choice: ");
     }
-
+    public static void addShipmentArea(Scanner scanner){
+        System.out.println("Enter Requested Shipment Area Name:");
+        String shipmentAreaName = scanner.nextLine();
+        ShipmentArea shipmentArea = new ShipmentArea(new ArrayList<>(),shipmentAreaName);
+        String areaJson = gson.toJson(shipmentArea);
+        boolean bool = mainController.AddShipmentArea(areaJson);
+        if (bool){
+            System.out.println("Shipment Area added");
+        }else{
+            System.out.println("Shipment Area already exists");
+        }
+    }
     public static void createTransport(Scanner scanner) {
         System.out.println("Enter Transport Request details:");
         System.out.print("Enter Driver ID: ");
@@ -138,10 +117,8 @@ public class Main {
         String requestedTime = scanner.nextLine();
         System.out.print("Enter Origin Address: ");
         String originAddress = scanner.nextLine();
-
         ArrayList<Site> destinationAddresses = new ArrayList<>();
-        ArrayList<SiteProductsReport> siteAndProducts = new ArrayList<>();
-
+        ArrayList<SiteProducts> siteAndProducts = new ArrayList<>();
         while (true) {
             System.out.print("Enter Site Name (or 'done' to finish): ");
             String siteName = scanner.nextLine();
@@ -149,39 +126,207 @@ public class Main {
                 break;
             }
 
-            // Get the products report for the site
-            String siteAndProductsJson = transportController.getAllSiteProductsReports();
-            Type listType = new TypeToken<ArrayList<SiteProductsReport>>() {}.getType();
-            ArrayList<SiteProductsReport> siteProductsReports = gson.fromJson(siteAndProductsJson, listType);
-
-            boolean siteFound = false;
-            for (SiteProductsReport spr : siteProductsReports) {
-                if (spr.getSite().getAddress().equals(siteName)) {
-                    destinationAddresses.add(spr.getSite());
-                    siteAndProducts.add(spr);
-                    siteFound = true;
-                    break;
+            Site site = mainController.getShipmentAreaController().getSiteByAddress(siteName);
+            if (site != null) {
+                destinationAddresses.add(site);
+                SiteProducts sp = mainController.getReportController().getSiteProducts(siteName);
+                if (sp != null) {
+                    siteAndProducts.add(sp);
                 }
-            }
-
-            if (!siteFound) {
-                System.out.println("Products report for site " + siteName + " not found.");
+            } else {
+                System.out.println("Site not found in area.");
             }
         }
-
         TransportRequest transportRequest = new TransportRequest(
                 requestDay,
                 requestedTime,
                 new Site(originAddress, "", ""),
                 siteAndProducts,
                 truckLicenseNumber,
-                driverId,
-                destinationAddresses
+                driverId
         );
 
         String json = gson.toJson(transportRequest);
-        String result = transportController.createTransport(json);
+        String result = mainController.createTransport(json);
+        // Check for errors using if-else statements
+        if (result.startsWith("Error:")) {
+            switch (result) {
+                case "Error: Invalid driver for the transport weight.":
+                    System.out.println("Invalid driver for the transport weight.");
+                    break;
+                case "Error: No available truck for the specified license number.":
+                    System.out.println("No available truck for the specified license number.");
+                    break;
+                case "Error: Truck can't handle the transport weight.":
+                    System.out.println("Truck can't handle the transport weight.");
+                    break;
+                case "Error: No available driver with the specified ID.":
+                    System.out.println("No available driver with the specified ID.");
+                    break;
+                case "Error: not all sites are in the same area.":
+                    System.out.println("Not all sites are in the same area.");
+                    break;
+                default:
+                    System.out.println(result);
+                    break;
+            }
+            return;
+        }
+
         System.out.println(result);
+        try {
+            Truck truck = mainController.getTruckController().getTruckByLicenseNumber(truckLicenseNumber);
+            double weight = mainController.getTransportService().weighTruck(siteAndProducts);
+            if (truck.getMaxWeight() - truck.getNetWeight() < weight) {
+                int transportId = parseTransportId(result);
+                System.out.println("Total weight exceeds the truck's maximum capacity. Choose an action:");
+                System.out.println("1. Remove Products");
+                System.out.println("2. Remove/Change Site");
+                System.out.println("3. Change Truck");
+                int action = scanner.nextInt();
+                scanner.nextLine(); // Consume newline
+
+                switch (action) {
+                    case 1:
+                        removeProducts(scanner, siteAndProducts,transportId);
+                        break;
+                    case 2:
+                        removeOrChangeSite(scanner, siteAndProducts,transportId);
+                        break;
+                    case 3:
+                        changeToAvailableTransportTruck(scanner);
+                }
+
+            }
+        } catch (IllegalArgumentException e) {
+            if (e.getMessage().contains("No available truck")) {
+                System.out.println(e.getMessage());
+            } else if (e.getMessage().contains("No available driver")) {
+                System.out.println(e.getMessage());
+            } else if (e.getMessage().contains("Driver license cannot fit the transport truck required license")) {
+                System.out.println(e.getMessage());
+            } else if (e.getMessage().contains("All destinations must be in the same area")) {
+                System.out.println(e.getMessage());
+            } else {
+                System.out.println("Error: " + e.getMessage());
+            }
+
+
+        }
+    }
+    public static void listSiteProductsByTransportId(Scanner scanner) {
+        System.out.print("Enter Transport ID: ");
+        int transportId = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+        mainController.displaySiteProductsById(transportId);
+    }
+
+    private static void removeProducts(Scanner scanner, ArrayList<SiteProducts> siteAndProducts,int transportId) {
+        while (true) {
+            System.out.print("Enter Site Address to remove products from (or 'done' to finish): ");
+            String siteAddress = scanner.nextLine();
+            if (siteAddress.equalsIgnoreCase("done")) {
+                break;
+            }
+            for (SiteProducts sp : siteAndProducts) {
+                if (sp.getSite().getAddress().equals(siteAddress)) {
+                    System.out.print("Enter Product ID to remove: ");
+                    int productId = scanner.nextInt();
+                    System.out.print("Enter quantity to remove: ");
+                    int quantityToRemove = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline
+
+                    boolean productFound = false;
+                    for (Product product : sp.getProducts()) {
+                        if (product.getId() == productId) {
+                            productFound = true;
+                            if (product.getQuantity() > quantityToRemove) {
+                                product.setQuantity(product.getQuantity() - quantityToRemove);
+                                mainController.getReportController().updateProductQuantity(siteAddress, productId, product.getQuantity());
+                                mainController.getReportController().updateTransportReport(transportId,"Product quantity update for "+
+                                        product.getId() + "current quantity: " + product.getQuantity());
+                                System.out.println("Product quantity of product id:" + productId + " updated.");
+                            } else {
+                                sp.getProducts().remove(product);
+                                boolean success = mainController.getReportController().removeProductsFromSite(siteAddress, productId);
+                                if (success) {
+                                    mainController.getReportController().updateTransportReport(transportId,"Product removed from transport");
+                                    System.out.println("Product removed from the site and database successfully.");
+                                } else {
+                                    System.out.println("Failed to remove product from the database.");
+                                }
+                            }
+                            break;
+                        }
+                    }
+
+                    if (!productFound) {
+                        System.out.println("Product ID not found at the specified site.");
+                    }
+                    break;
+                }
+            }
+        }
+    }
+    public static void changeToAvailableTransportTruck(Scanner scanner){
+        System.out.print("Enter transport id: ");
+        int transportId = scanner.nextInt();
+        scanner.nextLine();
+        String changes = "Changed transport truck";
+        Transport transport = mainController.getTransportById(transportId);
+        String json = gson.toJson(transport.getTruck());
+        mainController.changeTransportTruck(transportId,changes,json);
+
+    }
+    public static void removeOrChangeSite(Scanner scanner, ArrayList<SiteProducts> siteAndProducts, int transportId) {
+        while (true) {
+            System.out.print("Enter Site Address to remove/change (or 'done' to finish): ");
+            String siteAddress = scanner.nextLine();
+            if (siteAddress.equalsIgnoreCase("done")) {
+                break;
+            }
+
+            SiteProducts siteToRemove = null;
+            ArrayList<Site> sites = new ArrayList<>();
+            for (SiteProducts sp : siteAndProducts) {
+                if (sp.getSite().getAddress().equals(siteAddress)) {
+                    siteToRemove = sp;
+                    sites.add(siteToRemove.getSite());
+                    break;
+                }
+            }
+
+            if (siteToRemove != null) {
+                System.out.println("1. Remove Site");
+                System.out.println("2. Change Site");
+                int action = scanner.nextInt();
+                scanner.nextLine(); // Consume newline
+
+                if (action == 1) {
+                    // Removing site
+                    mainController.getTransportService().removeTransportDestinations(transportId, sites);
+                    mainController.getReportController().resetTransportReportId(siteAddress);
+                    mainController.getReportController().updateTransportReport(transportId, "Removed site: " + siteAddress);
+                } else if (action == 2) {
+                    // Changing site
+                    System.out.print("Enter new Site Address: ");
+                    String newSiteAddress = scanner.nextLine();
+                    Site newSite = mainController.getShipmentAreaController().getSiteByAddress(newSiteAddress);
+                    if (newSite != null) {
+                        String oldSiteJson = gson.toJson(siteToRemove.getSite());
+                        String newSiteJson = gson.toJson(newSite);
+                        mainController.changeDestination(transportId, oldSiteJson, newSiteJson);
+                        mainController.getReportController().updateTransportReport(transportId, "Changed site: " + siteAddress + ", to new site: " + newSiteAddress);
+                    } else {
+                        System.out.println("Site not found.");
+                    }
+                } else {
+                    System.out.println("Invalid choice.");
+                }
+            } else {
+                System.out.println("Site not found.");
+            }
+        }
     }
 
     public static void addDriver(Scanner scanner) {
@@ -191,68 +336,44 @@ public class Main {
         String driverName = scanner.nextLine();
         System.out.print("Is Driver Currently Available (Please Enter - (true/false)) : ");
         String availabilityStr = scanner.nextLine();
-        boolean availability = Boolean.parseBoolean(availabilityStr); // Convert from String to boolean
+        boolean availability = Boolean.parseBoolean(availabilityStr);
         System.out.print("Enter Driver ID: ");
-        long driverId = scanner.nextLong();
+        int driverId = scanner.nextInt();
         scanner.nextLine(); // Consume new line
         Driver newDriver = new Driver(licenseType, driverName, availability, driverId);
         String json = gson.toJson(newDriver);
-        String result = transportController.addDriver(json);
+        String result = mainController.addDriver(json);
         System.out.println(result);
     }
 
     public static void removeDriver(Scanner scanner) {
         System.out.print("Enter Driver ID To Remove: ");
-        long driverId = scanner.nextLong();
+        int driverId = scanner.nextInt();
         scanner.nextLine(); // Consume new line
-        String result = transportController.removeDriver(driverId);
-        if (result != null) {
-            System.out.println(result);
-        } else {
-            System.out.println("No Driver Matching The ID Given");
-        }
+        mainController.removeDriver(driverId);
     }
-    public static void addSiteToShipmentArea(Scanner scanner) {
-        try {
-            System.out.print("Enter Area Name: ");
-            String areaName = scanner.nextLine();
-            System.out.print("Enter Site Address: ");
-            String address = scanner.nextLine();
-            System.out.print("Enter Contact Number: ");
-            String contactNumber = scanner.nextLine();
-            System.out.print("Enter Contact Name: ");
-            String contactName = scanner.nextLine();
-            Site newSite = new Site(address, contactName, contactNumber);
-            String newSiteGson = gson.toJson(newSite);
 
-            String response = transportController.addSiteToArea(areaName, newSiteGson);
-            System.out.println(response);
-        } catch (Exception e) {
-            System.out.println("Error adding site: " + e.getMessage());
-        }
-    }
     public static void updateDriverAvailability(Scanner scanner) {
         System.out.print("Enter Driver ID: ");
-        long driverId = scanner.nextLong();
+        int driverId = scanner.nextInt();
         scanner.nextLine(); // Consume newline
         System.out.print("Is Driver Currently Available (Please Enter - (true/false)) : ");
         boolean available = scanner.nextBoolean();
         scanner.nextLine(); // Consume newline
 
-        String result = transportController.setDriverAvailability(driverId, available);
+        String result = mainController.setDriverAvailability(driverId, available);
         System.out.println(result);
     }
 
     public static void listAllDrivers() {
-        String allDriversJson = transportController.getAllDrivers();
-        ArrayList<Driver> allDrivers = gson.fromJson(allDriversJson, new com.google.gson.reflect.TypeToken<ArrayList<Driver>>() {}.getType());
+        ArrayList<Driver> allDrivers = mainController.getAllDrivers();
         for (Driver driver : allDrivers) {
             System.out.println(driver);
         }
     }
 
     public static void listAllTrucks() {
-        String allTrucksJson = transportController.getAllTrucks();
+        String allTrucksJson = mainController.getAllTrucks();
         ArrayList<Truck> allTrucks = gson.fromJson(allTrucksJson, new com.google.gson.reflect.TypeToken<ArrayList<Truck>>() {}.getType());
         for (Truck truck : allTrucks) {
             System.out.println(truck);
@@ -272,16 +393,16 @@ public class Main {
         System.out.print("Enter Truck Max Weight: ");
         double truckMaxWeight = scanner.nextDouble();
         scanner.nextLine();
-        Truck newTruck = new Truck(licenseNumber, truckModel, truckNetWeight, truckMaxWeight, requiredLicenseType);
+        Truck newTruck = new Truck(licenseNumber, truckModel, truckNetWeight, truckMaxWeight, requiredLicenseType,true);
         String json = gson.toJson(newTruck);
-        String result = transportController.addTruck(json);
+        String result = mainController.addTruck(json);
         System.out.println(result);
     }
 
     public static void removeTruck(Scanner scanner) {
         System.out.print("Enter Truck To Remove license Number: ");
         String licenseNumber = scanner.nextLine();
-        String result = transportController.removeTruck(licenseNumber);
+        String result = mainController.removeTruck(licenseNumber);
         System.out.println(result);
     }
 
@@ -292,168 +413,73 @@ public class Main {
         boolean available = scanner.nextBoolean();
         scanner.nextLine(); // Consume newline
 
-        String result =transportController.setTruckAvailability(licenseNumber, available);
+        String result = mainController.setTruckAvailability(licenseNumber, available);
         System.out.println(result);
     }
 
-    public static void listAllProductsReports() {
-        String allProductsReportsJson = transportController.getAllProductsReports();
-        ArrayList<ProductsReport> allProductsReports = gson.fromJson(allProductsReportsJson, new com.google.gson.reflect.TypeToken<ArrayList<ProductsReport>>() {}.getType());
-        for (ProductsReport report : allProductsReports) {
-            System.out.println(report.toString());
-        }
-    }
-
     public static void listAllTransports() {
-        String allTransportsJson = transportController.getAllTransports();
-        ArrayList<Transport> allTransports = gson.fromJson(allTransportsJson, new com.google.gson.reflect.TypeToken<ArrayList<Transport>>() {}.getType());
+        ArrayList<Transport> allTransports = mainController.getAllTransports();
         for (Transport transport : allTransports) {
             System.out.println("Transport ID: " + transport.getTransportId());
-            System.out.println("Transport Report: " + transport.getTsp());
-            System.out.println("-------------------------");
+            System.out.println("Transport Report: " + transport.getTransportReport());
+
         }
     }
 
-    public static void changeTransportTruck(Scanner scanner) {
-        try {
-            System.out.print("Enter Transport ID: ");
-            int transportId = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
-            System.out.print("Enter changes made: ");
-            String changes = scanner.nextLine();
-            String transportGson = transportController.getTransportById(transportId);
-            Transport transport = gson.fromJson(transportGson,Transport.class);
-            String result = transportController.changeTransportTruck(transport.getTransportId(), changes);
 
-            System.out.println(result);
-        } catch (Exception e) {
-            System.out.println("Error changing transport truck: " + e.getMessage());
-        }
-    }
-
-    public static void removeDestinations(Scanner scanner) {
-        try {
-            System.out.print("Enter Transport ID: ");
-            int transportId = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
-
-            ArrayList<Site> sitesToRemove = new ArrayList<>();
-            while (true) {
-                System.out.print("Enter Site Name to Remove (or 'done' to finish): ");
-                String siteName = scanner.nextLine();
-                if (siteName.equalsIgnoreCase("done")) {
-                    break;
-                }
-                ArrayList<ShipmentArea> shipmentAreas =  transportController.getShipmentAreaService().getShipmentAreas();
-                for(ShipmentArea shipmentArea : shipmentAreas){
-                    for (Site site : shipmentArea.getSites()){
-                        if (siteName.equals(site.getAddress())){
-                            sitesToRemove.add(site);
-                        }
-                    }
-                }
-
-            }
-
-            String sitesJson = gson.toJson(sitesToRemove);
-            System.out.print("Enter changes made: ");
-            String changes = scanner.nextLine();
-            String result = transportController.removeDestinationsFromTransport(transportId, sitesJson, changes);
-            System.out.println(result);
-        } catch (Exception e) {
-            System.out.println("Error removing destinations: " + e.getMessage());
-        }
-    }
-
-    public static void changeDestination(Scanner scanner) {
-        Site newSite = null;
-        Site oldSite = null;
-        try {
-            System.out.print("Enter Transport ID: ");
-            int transportId = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
-            System.out.print("Enter old Site Name: ");
-            String oldSiteName = scanner.nextLine();
-            System.out.print("Enter new Site Name: ");
-            String newSiteName = scanner.nextLine();
-            // Get all sites in the area
-            String areas = transportController.getAllAreas();
-            Type listType = new TypeToken<ArrayList<ShipmentArea>>() {}.getType();
-            ArrayList<ShipmentArea> shipmentAreas = gson.fromJson(areas, listType);
-
-            // Find oldSite and newSite
-            for (ShipmentArea area : shipmentAreas) {
-                for (Site site : area.getSites()) {
-                    if (site.getAddress().equals(oldSiteName)) {
-                        oldSite = site;
-                    }
-                    if (site.getAddress().equals(newSiteName)) {
-                        newSite = site;
-                    }
-                }
-            }
-            String oldSiteGson = gson.toJson(oldSite);
-            String newSiteGson = gson.toJson(newSite);
-            transportController.changeDestination(transportId,oldSiteGson,newSiteGson);
-            System.out.println("Destination changed successfully.");
-        } catch (Exception e) {
-            System.out.println("Error changing destination: " + e.getMessage());
-        }
-    }
-
-    private static void initializeData(String filePath) throws Exception {
-        try {
-            CSVReader.initializeData(filePath, transportController.getTruckService(), transportController.getDriverService(), transportController.getTransportService(), transportController.getReportService(),transportController.getShipmentAreaService());
-        } catch (IOException e) {
-            System.out.println("Error initializing data: " + e.getMessage());
-        }
-    }
-
-    public static void getProductsReportById(Scanner scanner) {
-        System.out.print("Enter Products Report ID: ");
-        int productsId = scanner.nextInt();
-        scanner.nextLine();
-        String result = transportController.getProductsReportById(productsId);
-        ProductsReport productsReport = gson.fromJson(result,ProductsReport.class);
-        if (result == null) {
-            System.out.print("No Products Report Matches this Id\n");
-        } else {
-            System.out.println(productsReport.toString());
-        }
-    }
 
     public static void getTransportReportById(Scanner scanner) {
         System.out.print("Enter Transport Report ID: ");
         int transportId = scanner.nextInt();
         scanner.nextLine();
-        String result = transportController.getTransportReportById(transportId);
-        if (result == null) {
+        TransportReport transportReport = mainController.getTransportReportById(transportId);
+        if (transportReport == null) {
             System.out.print("No Transport Report Matches this Id\n");
-        } else {
-            TransportReport transportReport = gson.fromJson(result,TransportReport.class);
+        }else{
             System.out.println(transportReport.toString());
         }
     }
-    public static void getProductReportBySite(Scanner scanner){
-        System.out.print("Enter Site Address: ");
-        String siteName = scanner.nextLine();
-        String sitesAndProducts = transportController.getAllSiteProductsReports();
-        Type listType = new TypeToken<ArrayList<SiteProductsReport>>() {}.getType();
-        ArrayList<SiteProductsReport> sitesAndProductsReports = gson.fromJson(sitesAndProducts, listType);
-        for (SiteProductsReport siteProductsReport : sitesAndProductsReports){
-            if (siteName.equals(siteProductsReport.getSite().getAddress())){
-                System.out.println(siteProductsReport.getProductsReport().toString());
-            }
+
+
+
+    public static void addSiteToShipmentArea(Scanner scanner) {
+        try {
+            System.out.print("Enter Area Name: ");
+            String areaName = scanner.nextLine();
+            System.out.print("Enter Site Address: ");
+            String address = scanner.nextLine();
+            System.out.print("Enter Contact Number: ");
+            String contactNumber = scanner.nextLine();
+            System.out.print("Enter Contact Name: ");
+            String contactName = scanner.nextLine();
+            Site newSite = new Site(address, contactName, contactNumber);
+            String newSiteGson = gson.toJson(newSite);
+
+            String response = mainController.addSiteToArea(areaName, newSiteGson);
+            System.out.println(response);
+        } catch (Exception e) {
+            System.out.println("Error adding site: " + e.getMessage());
         }
     }
+
     public static void removeSiteFromShipmentArea(Scanner scanner) {
         System.out.print("Enter Area Name: ");
         String areaName = scanner.nextLine();
         System.out.print("Enter Site Address: ");
         String address = scanner.nextLine();
-        String response = transportController.removeSiteFromArea(areaName, address);
+        String response = mainController.removeSiteFromArea(address,areaName);
         System.out.println(response);
     }
-
+    public static int parseTransportId(String response) {
+        if (response.startsWith("ERROR: ")) {
+            throw new IllegalArgumentException("");
+        }
+        String prefix = "Transport created successfully. Transport ID: ";
+        try {
+            return Integer.parseInt(response.substring(prefix.length()));
+        } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
+            throw new IllegalArgumentException("");
+        }
+    }
 
 }

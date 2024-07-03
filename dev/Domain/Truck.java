@@ -8,12 +8,12 @@ public class Truck {
     private double maxWeight;
     private boolean available;
 
-    public Truck(String l_number,String m,double n_weight,double m_weight,String r_license){
+    public Truck(String l_number,String m,double n_weight,double m_weight,String r_license,boolean available){
         this.licenseNumber = l_number;
         this.model = m;
         this.netWeight = n_weight;
         this.maxWeight = m_weight;
-        this.available = true;
+        this.available = available;
         this.requiredLicense = r_license;
     }
 
