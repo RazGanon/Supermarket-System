@@ -31,7 +31,7 @@ public class ShiftDao {
              PreparedStatement statement = conn.prepareStatement(query);
              ResultSet rs = statement.executeQuery()) {
             while (rs.next()) {
-                int shiftId = rs.getInt("shift_id");
+                int shiftId = rs.getInt("id");
                 String day = rs.getString("day");
                 String period = rs.getString("period");
                 Shift shift = new Shift( day, period,shiftId);

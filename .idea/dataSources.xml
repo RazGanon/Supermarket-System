@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="mydatabase" uuid="1c222cfe-093a-4c47-8e55-0dfb6ef64f4e">
+    <data-source source="LOCAL" name="mydatabase.db" uuid="d70c0b85-33fb-4858-8b8d-c6866f89ce9b">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:C:\Users\nivs5\Documents\GitHub\ADSS_Group_AR-208398511_313322380\ADSS_Group_AR-208398511_313322380\resources\db\mydatabase.db</jdbc-url>
+      <jdbc-url>jdbc:sqlite:C:\Users\user\Desktop\github\ADSS_Group_AR\resources\db\mydatabase.db</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
-      <libraries>
-        <library>
-          <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.45.1/org/xerial/sqlite-jdbc/3.45.1.0/sqlite-jdbc-3.45.1.0.jar</url>
-        </library>
-        <library>
-          <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.45.1/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar</url>
-        </library>
-      </libraries>
     </data-source>
   </component>
 </project>

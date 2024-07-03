@@ -77,8 +77,8 @@ public class ScheduleController {
         newestSchedule++;
         ScheduleBase.put(newestSchedule, schedule);
         // Create the Schedule object and save it to the database
-        Schedule schedule1 = new Schedule(getWeekFlag(), location, shifts);
-        scheduleDao.addSchedule(schedule1, getWeekFlag());
+       //Schedule schedule1 = new Schedule(getWeekFlag(), location, shifts);
+        scheduleDao.addSchedule(schedule, getWeekFlag());
         return schedule.toString();
     }
 

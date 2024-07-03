@@ -1,7 +1,6 @@
 package Data;
 
 import Domain.Schedule;
-import Domain.ScheduleController;
 import Domain.Shift;
 
 import java.sql.Connection;
@@ -75,7 +74,7 @@ public class ScheduleDao {
             statement.setString(2, supermarketAddress);
             try (ResultSet rs = statement.executeQuery()) {
                 while (rs.next()) {
-                    shifts.add(new Shift(rs.getString("day"), rs.getString("period"),rs.getInt("shift_id")));
+                    shifts.add(new Shift(rs.getString("day"), rs.getString("period"), rs.getInt("shift_id")));
                 }
             }
         }
@@ -83,18 +82,25 @@ public class ScheduleDao {
     }
 
     // Method to add a new schedule
-    public void addSchedule(Schedule schedule, int weekNum) {
+    public void addSchedule(StringBuilder scheduleBuilder, int weekNum) {
+        // Convert StringBuilder to String
+        String scheduleString = scheduleBuilder.toString();
+
+        // Parse the schedule string to extract supermarket address and shifts
+        String supermarketAddress = extractSupermarketAddress(scheduleString);
+        List<Shift> shifts = extractShifts(scheduleString);
+
         String query = "INSERT INTO schedule (week_number, supermarket_address) VALUES (?, ?)";
         try (Connection conn = DataSource.openConnection();
              PreparedStatement statement = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
             statement.setInt(1, weekNum);
-            statement.setString(2, schedule.getSupermarketAddress());
+            statement.setString(2, supermarketAddress);
             statement.executeUpdate();
 
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     int scheduleId = generatedKeys.getInt(1);
-                    for (Shift shift : ShiftDao.getInstance().getAllShifts()) {
+                    for (Shift shift : shifts) {
                         addShift(conn, scheduleId, shift);
                     }
                 }
@@ -104,7 +110,28 @@ public class ScheduleDao {
         }
     }
 
+    // Helper method to extract supermarket address from the schedule string
+    private String extractSupermarketAddress(String scheduleString) {
+        // Assuming the address is at the beginning of the string, separated by a newline
+        return scheduleString.split("\n")[0];
+    }
+
+    // Helper method to extract shifts from the schedule string
+    private List<Shift> extractShifts(String scheduleString) {
+        List<Shift> shifts = new ArrayList<>();
+        // Assuming shifts are listed after the address, one per line, in the format "day,period"
+        String[] lines = scheduleString.split("\n");
+        for (int i = 1; i < lines.length; i++) {
+            String[] parts = lines[i].split(",");
+            if (parts.length == 2) {
+                shifts.add(new Shift(parts[0], parts[1], 0)); // Assuming shift_id will be generated later
+            }
+        }
+        return shifts;
+    }
+
     // Method to add a shift to a schedule
+// Method to add a shift to a schedule
     private void addShift(Connection conn, int scheduleId, Shift shift) throws SQLException {
         String shiftQuery = "INSERT INTO shift (day, period) VALUES (?, ?)";
         try (PreparedStatement shiftStatement = conn.prepareStatement(shiftQuery, PreparedStatement.RETURN_GENERATED_KEYS)) {
@@ -120,6 +147,7 @@ public class ScheduleDao {
             }
         }
     }
+
 
     // Method to link shift to schedule
     private void linkShiftToSchedule(Connection conn, int scheduleId, int shiftId) throws SQLException {

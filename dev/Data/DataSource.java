@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class DataSource {
 
-    private static final String DB_URL = "jdbc:sqlite:C:/devop/projects/ADSS-AR/DB/mydatabase.db";
+    private static final String DB_URL = "jdbc:sqlite:C:\\Users\\user\\Desktop\\github\\ADSS_Group_AR\\resources\\db\\mydatabase.db";
     private static final String DRIVER = "org.sqlite.JDBC";
     private static Connection conn = null;
 
