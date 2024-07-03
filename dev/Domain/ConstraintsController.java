@@ -36,7 +36,7 @@ public class ConstraintsController {
         Map<Integer, String> userInputConstraints = new HashMap<>();
         for (int day = 0; day < 6; day++) {
             while (true) {
-                System.out.println("Enter constraints for day " + (day + 1) + ": (11 for both, 10 for morning, 01 for evening, 00 for none)");
+                System.out.println("Enter consitraints for day " + (day + 1) + ": (11 for both, 10 for morning, 01 for evening, 00 for none)");
                 String input = scanner.nextLine();
                 if (validateInput(input)) {
                     userInputConstraints.put(day, input);

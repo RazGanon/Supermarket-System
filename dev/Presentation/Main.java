@@ -1,5 +1,4 @@
 package Presentation;
-import Data.EmployeeDao;
 import Domain.*;
 import Domain.EmployeeController;
 import Domain.ScheduleController;
@@ -26,13 +25,13 @@ public class Main {
                 scheduleController = new ScheduleController("Store1", LocalDate.now(), LocalTime.of(8, 0), LocalTime.of(12, 0), LocalTime.of(13, 0), LocalTime.of(17, 0), new SuperMarket("Location", "Manager"), employeeManagement);
                 constraintsController = new ConstraintsController(scheduleController);
                 employeeManagement.addAllTAbleEmp();
-                //csvReader.initializeData("resources/data.csv", employeeManagement,  scheduleController);
+                csvReader.initializeData("resources/data.csv", employeeManagement,  scheduleController);
             } catch (Exception e) {
                 System.out.println("Error initializing data: " + e.getMessage());
             }
         }
 
-
+        //scsacsacsacsac
         Scanner scanner = new Scanner(System.in);
         while (true) {
             System.out.println("Enter username: ");
