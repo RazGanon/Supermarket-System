@@ -1,6 +1,5 @@
 package Domain;
 import Data.ConstraintsDao;
-import Data.EmployeeDao;
 
 import java.util.*;
 public class ConstraintsController {
@@ -11,7 +10,7 @@ public class ConstraintsController {
     private final Set<String>[] employeeForShiftsEvening = new HashSet[6];
     // flag --> if =0 Employees can submit new constraints , if == 1 they cant
     private  int submission = 0 ;
-    private static int weekFlag = 0;
+    //private int  weekFlag = 0;
     private final ScheduleController scheduleController;
     private static ConstraintsDao constraintDao=new ConstraintsDao();
     ;
@@ -95,7 +94,7 @@ public class ConstraintsController {
         Constraints constraints = new Constraints(matrix);
         constraintsMap.put(employeeId, constraints);
         //add function to save user constraints to db
-        constraintDao.saveConstraints(employeeId,constraints,weekFlag);
+        constraintDao.saveConstraints(employeeId,constraints, scheduleController.getWeekFlag());
     }
 
     public int getSubmission(){
@@ -150,7 +149,7 @@ public class ConstraintsController {
     public void startSubmission(){
         if (submission!=0) {
             this.submission = 0;
-            weekFlag++;
+            scheduleController.PlusWeekFlag();
             System.out.println("Submissions have been allowed.");
         }
     }

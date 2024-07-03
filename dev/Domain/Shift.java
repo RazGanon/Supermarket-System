@@ -2,13 +2,12 @@ package Domain;
 
 public class Shift {
     private String shiftType;
-    private String startTime;
-    private String endTime;
+    private String day;
 
-    public Shift(String shiftType, String startTime, String endTime) {
+    public Shift(String day , String shiftType) {
         this.shiftType = shiftType;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.day = day;
+
     }
 
     public String getShiftType() {
@@ -19,19 +18,11 @@ public class Shift {
         this.shiftType = shiftType;
     }
 
-    public String getStartTime() {
-        return startTime;
+
+
+
+    public String getday() {
+        return this.day;
     }
 
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
-    }
-
-    public String getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
-    }
 }

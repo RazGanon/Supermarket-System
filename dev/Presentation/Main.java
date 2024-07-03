@@ -22,7 +22,7 @@ public class Main {
 
         if (useCsv.equalsIgnoreCase("yes")) {
             try {
-                scheduleController = new ScheduleController("Store1", LocalDate.now(), LocalTime.of(8, 0), LocalTime.of(12, 0), LocalTime.of(13, 0), LocalTime.of(17, 0), new SuperMarket("Location", "Manager"), employeeManagement);
+                scheduleController = new ScheduleController("Store1", LocalDate.now(), LocalTime.of(8, 0), LocalTime.of(12, 0), LocalTime.of(13, 0), LocalTime.of(17, 0), new SuperMarket("Location", "Manager"), employeeManagement,constraintsController);
                 constraintsController = new ConstraintsController(scheduleController);
                 employeeManagement.addAllTAbleEmp();
                 //csvReader.initializeData("resources/data.csv", employeeManagement,  scheduleController);
@@ -246,20 +246,20 @@ public class Main {
 //            }
 //        }
 //    }
-    private static void showPastSchedulesForEmployee(Employee employee) {
-        List<Schedule> pastSchedules = employee.getPastSchedules();
-        if (pastSchedules.isEmpty()) {
-            System.out.println("No past schedules found for employee " + employee.getFname() + " " + employee.getLname());
-        } else {
-            System.out.println("Past schedules for employee " + employee.getFname() + " " + employee.getLname() + ":");
-            for (Schedule schedule : pastSchedules) {
-                System.out.println("Date: " + schedule.getDate());
-                for (Shift shift : schedule.getShifts()) {
-                    System.out.println("  Shift: " + shift.getShiftType() + " from " + shift.getStartTime() + " to " + shift.getEndTime());
-                }
-            }
-        }
-    }
+//    private static void showPastSchedulesForEmployee(Employee employee) {
+//        List<Schedule> pastSchedules = employee.getPastSchedules();
+//        if (pastSchedules.isEmpty()) {
+//            System.out.println("No past schedules found for employee " + employee.getFname() + " " + employee.getLname());
+//        } else {
+//            System.out.println("Past schedules for employee " + employee.getFname() + " " + employee.getLname() + ":");
+//            for (Schedule schedule : pastSchedules) {
+//                System.out.println("Date: " + schedule.getDate());
+//                for (Shift shift : schedule.getShifts()) {
+//                    System.out.println("  Shift: " + shift.getShiftType() + " from " + shift.getStartTime() + " to " + shift.getEndTime());
+//                }
+//            }
+//        }
+//    }
     private static void showMenuForManager(Scanner scanner) {
         while (true) {
             System.out.println("Hello Manager !!");
@@ -351,7 +351,7 @@ public class Main {
                     Role r = employeeManagement.getRoleEmployeeById(employeeToCheck.getId());
                     break;
                 case 5:
-                    showPastSchedulesForEmployee(employeeToCheck);
+                    //showPastSchedulesForEmployee(employeeToCheck);
                     break;
                 case 11:
                     System.out.println("Exiting...");
