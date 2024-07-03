@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ConstraintsDao {
+    public ConstraintsDao(){}
 
     public Constraints getConstraintsByEmployeeId(String employeeId) {
         String sql = "SELECT * FROM ConstraintsTable WHERE Id = ?";
@@ -44,8 +45,8 @@ public class ConstraintsDao {
         }
     }
 
-    public void saveConstraints(String employeeId, Constraints constraints) {
-        String sql = "INSERT INTO ConstraintsTable (Id, `Day 1 M`, `Day 1 E`, `Day 2 M`, `Day 2 E`, "
+    public void saveConstraints(String employeeId, Constraints constraints,int weekNum) {
+        String sql = "INSERT INTO ConstraintsTable (week,Id, `Day 1 M`, `Day 1 E`, `Day 2 M`, `Day 2 E`, "
                 + "`Day 3 M`, `Day 3 E`, `Day 4 M`, `Day 4 E`, `Day 5 M`, `Day 5 E`, `Day 6 M`, `Day 6 E`) "
                 + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         System.out.println("Executing query: " + sql + " with Id: " + employeeId);

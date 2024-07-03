@@ -1,4 +1,7 @@
 package Domain;
+import Data.ConstraintsDao;
+import Data.EmployeeDao;
+
 import java.util.*;
 public class ConstraintsController {
     private final Map<String, Constraints> constraintsMap = new HashMap<>();
@@ -8,7 +11,10 @@ public class ConstraintsController {
     private final Set<String>[] employeeForShiftsEvening = new HashSet[6];
     // flag --> if =0 Employees can submit new constraints , if == 1 they cant
     private  int submission = 0 ;
+    private static int weekFlag = 0;
     private final ScheduleController scheduleController;
+    private static ConstraintsDao constraintDao=new ConstraintsDao();
+    ;
     public ConstraintsController(ScheduleController scheduleController) {
         this.scheduleController = scheduleController;
         for (int i = 0; i < 6; i++) {
@@ -48,6 +54,7 @@ public class ConstraintsController {
             }
         }
         addConstraintsFromUserInput(employeeId, userInputConstraints);
+
         System.out.println("Constraints added for employee ID: " + employeeId);
     }
     public void addConstraintsFromUserInput(String employeeId, Map<Integer, String> userInputConstraints) {
@@ -87,6 +94,8 @@ public class ConstraintsController {
 
         Constraints constraints = new Constraints(matrix);
         constraintsMap.put(employeeId, constraints);
+        //add function to save user constraints to db
+        constraintDao.saveConstraints(employeeId,constraints,weekFlag);
     }
 
     public int getSubmission(){
@@ -139,9 +148,11 @@ public class ConstraintsController {
 
     }
     public void startSubmission(){
-        this.submission = 0 ;
-        System.out.println("Submissions have been allowed.");
-
+        if (submission!=0) {
+            this.submission = 0;
+            weekFlag++;
+            System.out.println("Submissions have been allowed.");
+        }
     }
     public void printListEmpl() {
         System.out.println("\nThe Map Contains constraints: \n\n" + constraintsMap);
