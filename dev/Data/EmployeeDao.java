@@ -14,20 +14,21 @@ import java.util.Map;
 
 public class EmployeeDao {
     private Connection conn;
-    private static EmployeeDao single_instance = null;
+    //private static EmployeeDao single_instance = null;
     //private static Map<Integer, Employee> EmpCache = new HashMap<>();
 
-    private EmployeeDao() {
+    public EmployeeDao() {
     }
 
-    public static synchronized EmployeeDao getInstance() {
-        if (single_instance == null) {
-            single_instance = new EmployeeDao();
-        }
-        return single_instance;
-    }
+    //public static synchronized EmployeeDao getInstance() {
+     //   if (single_instance == null) {
+      //      single_instance = new EmployeeDao();
+        //}
+       // return single_instance;
+    //}
 
     public List<Employee> getAllEmp() {
+
         //this function insert all the employees from the database to the system
         List<Employee> employees = new ArrayList<>();
         try {
@@ -39,7 +40,7 @@ public class EmployeeDao {
                 String lname = rs.getString("lname");
                 String id = rs.getString("id");
                 int salary = rs.getInt("salary");
-                LocalDate startdate = rs.getDate("Date").toLocalDate();
+                LocalDate startdate = rs.getDate("hire_date").toLocalDate();
                 String jobType = rs.getString("jobType");
                 String daysoff = rs.getString("days_off");
                 Role role = Role.valueOf(rs.getString("role"));
@@ -77,7 +78,7 @@ public class EmployeeDao {
                 String lname = rs.getString("lname");
                 String id_new = rs.getString("id");
                 int salary = rs.getInt("salary");
-                LocalDate startdate = rs.getDate("Date").toLocalDate();
+                LocalDate startdate = rs.getDate("hire_date").toLocalDate();
                 String jobType = rs.getString("jobType");
                 String daysoff = rs.getString("days_off");
                 Role role = Role.valueOf(rs.getString("role"));
@@ -101,7 +102,7 @@ public class EmployeeDao {
     public void registerEmployee(Employee employee) {
         try {
             conn = DataSource.openConnection();
-            String sql = "INSERT INTO Employee (id, fname, lname, salary, Date, jobType, days_off, super_market_id, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO Employee (ID, fname, lname, salary, Address, Manager_Name, Job, days_off, Role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setString(1, employee.getId());
             statement.setString(2, employee.getFname());

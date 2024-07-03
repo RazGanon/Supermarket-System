@@ -1,5 +1,7 @@
 package Domain;
 
+import Data.EmployeeDao;
+
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -14,6 +16,7 @@ public class EmployeeController {
     // List of employees
     static ArrayList<Employee> employees = new ArrayList<>();
     // Method to register an employee
+    private static EmployeeDao employeeDao=new EmployeeDao();
 
     // here i build two register employee function -- one of them is when the admin want to add employee manually and than he need to
     // ask the new employee what password he want , and the other is when i build employee automatically
@@ -31,7 +34,9 @@ public class EmployeeController {
         Employee newEmployee = new Employee(fName, lName, id, salary, terms, superMarketBranch);
         try {
             addEmployeeToSystem(newEmployee);
+
             //employeeMap.put(newEmployee.getId(), newEmployee);
+            employeeDao.registerEmployee(newEmployee); // add new emp to db
             System.out.println("Ask the employee what password they want: ");
             Scanner scanner = new Scanner(System.in);
             String newEmpPassword = scanner.nextLine();
@@ -63,7 +68,9 @@ public class EmployeeController {
         Employee newEmployee = new Employee(fName, lName, id, salary, terms, superMarketBranch);
         try {
             //employeeMap.put(newEmployee.getId(), newEmployee);
-            addEmployeeToSystem(newEmployee);
+            //addEmployeeToSystem(newEmployee);
+            employeeDao.registerEmployee(newEmployee);
+
             newEmployee.setPassword(password); // employee chose password and we added it to his info
             newEmployee.setRole(r);
             //System.out.println("Employee registered successfully: " + newEmployee);
@@ -135,8 +142,12 @@ public class EmployeeController {
         if (employee!= null){
             employees.add(employee); // added to the main list of employees
             employeeMap.put(employee.getId(),employee); // added to the map of employees for fast find emp by id
+            //employeeDao.registerEmployee(employee);
         }
 
+    }
+    public  void addAllTAbleEmp(){
+        employeeDao.getAllEmp();
     }
 
 }
