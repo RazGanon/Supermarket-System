@@ -13,7 +13,7 @@ import java.util.Map;
 public class SuperMarketDao {
     private Connection conn;
     private static SuperMarketDao single_instance = null;
-    private static Map<Integer, SuperMarket> superMarketCache = new HashMap<>();
+    private static Map<String, SuperMarket> superMarketCache = new HashMap<>();
 
     private SuperMarketDao() {
     }
@@ -32,12 +32,11 @@ public class SuperMarketDao {
             PreparedStatement statement = conn.prepareStatement("SELECT * FROM SuperMarkets");
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                int id = rs.getInt("id");
                 String address = rs.getString("address");
                 String managerName = rs.getString("manager_name");
                 SuperMarket superMarket = new SuperMarket(address, managerName);
                 superMarkets.add(superMarket);
-                superMarketCache.put(id, superMarket);
+                superMarketCache.put(address, superMarket);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -47,26 +46,25 @@ public class SuperMarketDao {
         return superMarkets;
     }
 
-    public SuperMarket getSuperMarket(int id) {
-        SuperMarket superMarket = superMarketCache.get(id);
+    public SuperMarket getSuperMarketByAddress(String address) {
+        SuperMarket superMarket = superMarketCache.get(address);
         if (superMarket != null) {
             return superMarket;
         }
         try {
             conn = DataSource.openConnection();
-            PreparedStatement statement = conn.prepareStatement("SELECT * FROM SuperMarkets WHERE id = ?");
-            statement.setInt(1, id);
+            PreparedStatement statement = conn.prepareStatement("SELECT * FROM SuperMarkets WHERE address = ?");
+            statement.setString(1, address);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
-                String address = rs.getString("address");
                 String managerName = rs.getString("manager_name");
                 superMarket = new SuperMarket(address, managerName);
-                superMarketCache.put(id, superMarket);
+                superMarketCache.put(address, superMarket);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            DataSource.closeConnection();
+            //DataSource.closeConnection();
         }
         return superMarket;
     }
@@ -74,52 +72,53 @@ public class SuperMarketDao {
     public void addSuperMarket(SuperMarket superMarket) {
         try {
             conn = DataSource.openConnection();
-            PreparedStatement statement = conn.prepareStatement("INSERT INTO SuperMarkets (id, address, manager_name) VALUES (?, ?, ?)");
-            statement.setInt(1, superMarket.getId());
-            statement.setString(2, superMarket.getAddress());
-            statement.setString(3, superMarket.getManagerName());
+            PreparedStatement statement = conn.prepareStatement("INSERT INTO SuperMarkets (address, manager_name) VALUES (?, ?)");
+            statement.setString(1, superMarket.getAddress());
+            statement.setString(2, superMarket.getManagerName());
             statement.executeUpdate();
-            superMarketCache.put(superMarket.getId(), superMarket);
+            superMarketCache.put(superMarket.getAddress(), superMarket);
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            DataSource.closeConnection();
+            //DataSource.closeConnection();
         }
     }
 
-    public boolean updateSuperMarket(int id, String newAddress, String newManagerName) {
+    public boolean updateSuperMarket(String address, String newAddress, String newManagerName) {
         boolean success = false;
         try {
             conn = DataSource.openConnection();
-            PreparedStatement statement = conn.prepareStatement("UPDATE SuperMarkets SET address = ?, manager_name = ? WHERE id = ?");
+            PreparedStatement statement = conn.prepareStatement("UPDATE SuperMarkets SET address = ?, manager_name = ? WHERE address = ?");
             statement.setString(1, newAddress);
             statement.setString(2, newManagerName);
-            statement.setInt(3, id);
+            statement.setString(3, address);
             int affectedRows = statement.executeUpdate();
             if (affectedRows > 0) {
-                SuperMarket superMarket = superMarketCache.get(id);
+                SuperMarket superMarket = superMarketCache.get(address);
                 if (superMarket != null) {
                     superMarket.setAddress(newAddress);
                     superMarket.setManagerName(newManagerName);
+                    superMarketCache.put(newAddress, superMarket);
+                    superMarketCache.remove(address);
                 }
                 success = true;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            DataSource.closeConnection();
+           //DataSource.closeConnection();
         }
         return success;
     }
 
-    public void removeSuperMarket(int id) {
+    public void removeSuperMarket(String address) {
         try {
             conn = DataSource.openConnection();
-            PreparedStatement statement = conn.prepareStatement("DELETE FROM SuperMarkets WHERE id = ?");
-            statement.setInt(1, id);
+            PreparedStatement statement = conn.prepareStatement("DELETE FROM SuperMarkets WHERE address = ?");
+            statement.setString(1, address);
             int affectedRows = statement.executeUpdate();
             if (affectedRows > 0) {
-                superMarketCache.remove(id);
+                superMarketCache.remove(address);
                 System.out.println("SuperMarket deleted successfully");
             } else {
                 System.out.println("SuperMarket not found");
@@ -127,7 +126,7 @@ public class SuperMarketDao {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            DataSource.closeConnection();
+            //DataSource.closeConnection();
         }
     }
 }
