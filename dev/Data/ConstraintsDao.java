@@ -5,8 +5,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ConstraintsDao {
+    private final Map<String, Constraints> relevantConstraintsMap = new HashMap<>();
     public ConstraintsDao(){}
 
     public Constraints getConstraintsByEmployeeId(String employeeId) {
@@ -43,7 +46,47 @@ public class ConstraintsDao {
             System.out.println(e.getMessage());
             return null;
         }
+
+
     }
+    public Map<String, Constraints> getConstraintsByWeek(int WeekNum) {
+        String sql = "SELECT * FROM ConstraintsTable WHERE Week = ?";
+        Map<String, Constraints> relevantConstraintsMap = new HashMap<>();
+
+        try (Connection conn = DataSource.openConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, WeekNum);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                int week = rs.getInt("Week");
+                if (week == WeekNum) {
+                    String employeeId = rs.getString("Id");
+                    int[][] constraintsMatrix = new int[2][7]; // Corrected to 7 days
+                    constraintsMatrix[0][0] = rs.getInt("Day 1 M");
+                    constraintsMatrix[1][0] = rs.getInt("Day 1 E");
+                    constraintsMatrix[0][1] = rs.getInt("Day 2 M");
+                    constraintsMatrix[1][1] = rs.getInt("Day 2 E");
+                    constraintsMatrix[0][2] = rs.getInt("Day 3 M");
+                    constraintsMatrix[1][2] = rs.getInt("Day 3 E");
+                    constraintsMatrix[0][3] = rs.getInt("Day 4 M");
+                    constraintsMatrix[1][3] = rs.getInt("Day 4 E");
+                    constraintsMatrix[0][4] = rs.getInt("Day 5 M");
+                    constraintsMatrix[1][4] = rs.getInt("Day 5 E");
+                    constraintsMatrix[0][5] = rs.getInt("Day 6 M");
+                    constraintsMatrix[1][5] = rs.getInt("Day 6 E");
+                    constraintsMatrix[0][6] = rs.getInt("Day 7 M");
+                    constraintsMatrix[1][6] = rs.getInt("Day 7 E");
+                    relevantConstraintsMap.put(employeeId, new Constraints(constraintsMatrix));
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+        return relevantConstraintsMap;
+    }
+
 
     public void saveConstraints(String employeeId, Constraints constraints,int weekNum) {
         String sql = "INSERT INTO ConstraintsTable (Id, `Day 1 M`, `Day 1 E`, `Day 2 M`, `Day 2 E`, "

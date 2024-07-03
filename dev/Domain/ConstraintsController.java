@@ -3,13 +3,15 @@ import Data.ConstraintsDao;
 
 import java.util.*;
 public class ConstraintsController {
+    private final Map<String, Constraints> relevantConstraintsMap = new HashMap<>();
+
     private final Map<String, Constraints> constraintsMap = new HashMap<>();
     //this set contains for each Morning Shift - Who is work by ID
     private final Set<String>[] employeeForShiftsMorning = new HashSet[6];
     //this set contains for each Evening Shift - Who is work
     private final Set<String>[] employeeForShiftsEvening = new HashSet[6];
     // flag --> if =0 Employees can submit new constraints , if == 1 they cant
-    private  int submission = 0 ;
+    private  int submission = 1 ;
     //private int  weekFlag = 0;
     private final ScheduleController scheduleController;
     private static ConstraintsDao constraintDao=new ConstraintsDao();
@@ -92,10 +94,19 @@ public class ConstraintsController {
         }
 
         Constraints constraints = new Constraints(matrix);
+        //this function add the constraint to constraint map
         constraintsMap.put(employeeId, constraints);
+        //this function add the relevant constraint to relevant constraint map
+        relevantConstraintsMap.put(employeeId, constraints);
         //add function to save user constraints to db
         constraintDao.saveConstraints(employeeId,constraints, scheduleController.getWeekFlag());
     }
+    //add just the relevant constraints
+    public void addRelevantConstraintFromDbToMap(){
+         Map<String, Constraints> newRMap = constraintDao.getConstraintsByWeek(scheduleController.getWeekFlag());
+        relevantConstraintsMap.putAll(newRMap);
+    }
+
 
     public int getSubmission(){
         return this.submission;
@@ -128,11 +139,13 @@ public class ConstraintsController {
     }
 
     public void generateWeeklySchedule() {
+        stopSubmission();
+        addRelevantConstraintFromDbToMap();
         String schedule = scheduleController.generateWeeklySchedule(getAllConstraints());
         System.out.println(schedule);
     }
     public Map<String, Constraints> getAllConstraints() {
-        return constraintsMap;
+        return relevantConstraintsMap;
     }
     public Constraints getMatrixFromID(String id) {
         return constraintsMap.get(id);
@@ -152,6 +165,7 @@ public class ConstraintsController {
             scheduleController.PlusWeekFlag();
             System.out.println("Submissions have been allowed.");
         }
+        this.submission=0;
     }
     public void printListEmpl() {
         System.out.println("\nThe Map Contains constraints: \n\n" + constraintsMap);
@@ -166,8 +180,9 @@ public class ConstraintsController {
         }
     }
 
-    public void printAllConstraints() {
-        for (Map.Entry<String, Constraints> entry : constraintsMap.entrySet()) {
+    public void printAllRelevantConstraints() {
+        addRelevantConstraintFromDbToMap();
+        for (Map.Entry<String, Constraints> entry : relevantConstraintsMap.entrySet()) {
             System.out.println("Employee ID: " + entry.getKey());
             printMatrix(entry.getValue().getMatrix());
             System.out.println();

@@ -25,6 +25,8 @@ public class Main {
                 scheduleController = new ScheduleController("Store1", LocalDate.now(), LocalTime.of(8, 0), LocalTime.of(12, 0), LocalTime.of(13, 0), LocalTime.of(17, 0), new SuperMarket("Location", "Manager"), employeeManagement,constraintsController);
                 constraintsController = new ConstraintsController(scheduleController);
                 employeeManagement.addAllTAbleEmp();
+                SuperMarketController.addAllSuperMarketsToSystem();
+                scheduleController.connectAllShiftsToSYS();
                 //csvReader.initializeData("resources/data.csv", employeeManagement,  scheduleController);
             } catch (Exception e) {
                 System.out.println("Error initializing data: " + e.getMessage());
@@ -93,7 +95,7 @@ public class Main {
 
         // Show the list of supermarkets and let the user choose one
         System.out.println("Choose a supermarket from the following list:");
-        List<SuperMarket> superMarkets = SuperMarket.getAllSuperMarkets();
+        List<SuperMarket> superMarkets = SuperMarketController.getAllSuperMarkets();
         for (int i = 0; i < superMarkets.size(); i++) {
             System.out.println((i + 1) + ". " + superMarkets.get(i));
         }
@@ -275,7 +277,8 @@ public class Main {
             System.out.println("9. Add SuperMarket To The System");
             System.out.println("10. Show me all The Employees in my supermarket");
             System.out.println("11. Show me all The Employees Constraints");
-            System.out.println("12. Exit");
+            System.out.println("12. Show me all The SuperMarkets");
+            System.out.println("13. Exit");
             System.out.print("Enter your choice: ");
             int choice = scanner.nextInt();
             scanner.nextLine(); // Consume newline
@@ -312,9 +315,12 @@ public class Main {
                     showAllEmployeesInSuperMarket(scanner);
                     break;
                 case 11:
-                    constraintsController.printAllConstraints();
+                    constraintsController.printAllRelevantConstraints();
                     break;
                 case 12:
+                    SuperMarketController.printAllSuperMarkets();
+                    break;
+                case 13:
                     System.out.println("Exiting...");
                     return;
                 default:

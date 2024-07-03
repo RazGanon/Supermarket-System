@@ -1,5 +1,7 @@
 package Domain;
 import Data.EmployeeDao;
+import Data.SuperMarketDao;
+
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -9,10 +11,12 @@ public class EmployeeController {
     private static Map<String, Employee> employeeMap = new HashMap<>();
     //this map contain adrress of supermarket, supermarket object
     private Map<String, SuperMarket> supermarketsMap = new HashMap<>();
+
     // List of employees
     static ArrayList<Employee> employees = new ArrayList<>();
     // Method to register an employee
     private static EmployeeDao employeeDao=new EmployeeDao();
+    private static SuperMarketDao superMarketDao=new SuperMarketDao();
 
     // here i build two register employee function -- one of them is when the admin want to add employee manually and than he need to
     // ask the new employee what password he want , and the other is when i build employee automatically
@@ -142,6 +146,7 @@ public class EmployeeController {
         }
 
     }
+
     public  void addAllTAbleEmp(){
         employeeDao.getAllEmp();
     }

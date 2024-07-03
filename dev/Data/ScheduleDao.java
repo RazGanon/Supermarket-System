@@ -1,6 +1,7 @@
 package Data;
 
 import Domain.Schedule;
+import Domain.ScheduleController;
 import Domain.Shift;
 
 import java.sql.Connection;
@@ -74,7 +75,7 @@ public class ScheduleDao {
             statement.setString(2, supermarketAddress);
             try (ResultSet rs = statement.executeQuery()) {
                 while (rs.next()) {
-                    shifts.add(new Shift(rs.getString("day"), rs.getString("period")));
+                    shifts.add(new Shift(rs.getString("day"), rs.getString("period"),rs.getInt("shift_id")));
                 }
             }
         }
@@ -93,7 +94,7 @@ public class ScheduleDao {
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     int scheduleId = generatedKeys.getInt(1);
-                    for (Shift shift : schedule.getShifts()) {
+                    for (Shift shift : ShiftDao.getInstance().getAllShifts()) {
                         addShift(conn, scheduleId, shift);
                     }
                 }

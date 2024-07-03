@@ -1,12 +1,17 @@
 package Domain;
 import Data.ConstraintsDao;
 import Data.ScheduleDao;
+import Data.ShiftDao;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
 public class ScheduleController {
     private static ScheduleDao scheduleDao=new ScheduleDao();
+    private static ShiftDao shiftdao=new ShiftDao();
+    private List<Shift> shifts;
+
+
     private final ConstraintsController constrainManagement;
 
     private EmployeeController employeeManagement;
@@ -42,6 +47,9 @@ public class ScheduleController {
         for (int i = 0; i < 6; i++) {
             shiftRequirements.put(i, new ShiftRules(0, 0, 0, 0));
         }
+    }
+    public void   connectAllShiftsToSYS(){
+        shifts = shiftdao.getAllShifts();
     }
 
     public void setShiftRequirements(int day, ShiftRules rules) {
@@ -99,9 +107,13 @@ public class ScheduleController {
         return String.join(", ", assignedEmployeeNames);
 
     }
+    public List<Shift> getallShifts() {
+        return this.shifts;
+    }
 
 
-    public String getCurrentSchedule() {
+
+        public String getCurrentSchedule() {
         if (!ScheduleBase.isEmpty()) {
             return ScheduleBase.get(newestSchedule).toString();
         }

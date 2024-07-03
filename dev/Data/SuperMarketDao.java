@@ -15,7 +15,7 @@ public class SuperMarketDao {
     private static SuperMarketDao single_instance = null;
     private static Map<String, SuperMarket> superMarketCache = new HashMap<>();
 
-    private SuperMarketDao() {
+    public SuperMarketDao() {
     }
 
     public static synchronized SuperMarketDao getInstance() {
