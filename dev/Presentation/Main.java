@@ -1,4 +1,5 @@
 package Presentation;
+import Data.EmployeeDao;
 import Domain.*;
 import Domain.EmployeeController;
 import Domain.ScheduleController;
@@ -24,7 +25,8 @@ public class Main {
             try {
                 scheduleController = new ScheduleController("Store1", LocalDate.now(), LocalTime.of(8, 0), LocalTime.of(12, 0), LocalTime.of(13, 0), LocalTime.of(17, 0), new SuperMarket("Location", "Manager"), employeeManagement);
                 constraintsController = new ConstraintsController(scheduleController);
-                csvReader.initializeData("resources/data.csv", employeeManagement,  scheduleController);
+                employeeManagement.addAllTAbleEmp();
+                //csvReader.initializeData("resources/data.csv", employeeManagement,  scheduleController);
             } catch (Exception e) {
                 System.out.println("Error initializing data: " + e.getMessage());
             }
@@ -108,7 +110,8 @@ public class Main {
             }
         }
         LocalDate date = LocalDate.now();
-        terms newTerms = new terms(date, jobType,dayOff);
+        String sdate = date.toString();
+        terms newTerms = new terms(sdate, jobType,dayOff);
 
         // Assuming registerEmployeeManually takes these parameters
         employeeManagement.registerEmployeeManually(firstName, lastName, id, salary,newTerms,chosenSuperMarket);

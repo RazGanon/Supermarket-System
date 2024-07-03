@@ -37,6 +37,7 @@ public class csvReader {
                         String lname = values[2];
                         int salary = Integer.parseInt(values[3]);
                         LocalDate startDate = LocalDate.parse(values[4]);
+                        String sStartDAte=startDate.toString();
                         String role = values[5];
                         String wage = values[6];
                         String daysOff = values[7];
@@ -45,7 +46,7 @@ public class csvReader {
                         String password = values[10];
 
                         // Create necessary objects
-                        terms t = new terms(startDate, role , daysOff);
+                        terms t = new terms(sStartDAte, role , daysOff);
                         SuperMarket superMarket = new SuperMarket(locationOfSuper, managerFullName);
                         Role r = Role.valueOf(role);
 

@@ -113,5 +113,32 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="sqlite-jdbc-3.46.0.0" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/devop/projects/ADSS-AR/DB/sqlite-jdbc-3.46.0.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/devop/projects/ADSS-AR/DB/slf4j-simple-1.7.32.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/devop/projects/ADSS-AR/DB/slf4j-api-1.7.32.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>

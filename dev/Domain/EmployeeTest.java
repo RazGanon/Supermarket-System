@@ -18,7 +18,9 @@ public class EmployeeTest {
     @BeforeEach
     void setUp() {
         superMarket = new SuperMarket("TestSuperMarket","John");
-        employeeTerms = new terms(LocalDate.now(),"Full-Time","0");
+        LocalDate startDate =LocalDate.now();
+        String SstartDate = startDate.toString();
+        employeeTerms = new terms(SstartDate,"Full-Time","0");
         employee = new Employee("John", "Doe", "123", 50000, employeeTerms, superMarket);
     }
 
@@ -72,7 +74,9 @@ public class EmployeeTest {
 
     @Test
     void testSetTerms() {
-        terms newTerms = new terms(LocalDate.now(),"Part-Time","10");
+        LocalDate startDate =LocalDate.now();
+        String SstartDate = startDate.toString();
+        terms newTerms = new terms(SstartDate,"Part-Time","10");
         employee.setTerms(newTerms);
         assertEquals(newTerms, employee.getTerms());
     }
