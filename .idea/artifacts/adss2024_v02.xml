@@ -2,6 +2,9 @@
   <artifact type="jar" name="adss2024_v02">
     <output-path>$PROJECT_DIR$/release/artifacts/adss2024_v02</output-path>
     <root id="archive" name="dev.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/adss2024_v02/META-INF/MANIFEST.MF" />
+      </element>
       <element id="module-output" name="dev" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/junit/junit/4.13.1/junit-4.13.1.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar" path-in-jar="/" />
