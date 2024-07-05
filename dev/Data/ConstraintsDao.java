@@ -92,7 +92,7 @@ public class ConstraintsDao {
         String sql = "INSERT INTO ConstraintsTable (Id, `Day 1 M`, `Day 1 E`, `Day 2 M`, `Day 2 E`, "
                 + "`Day 3 M`, `Day 3 E`, `Day 4 M`, `Day 4 E`, `Day 5 M`, `Day 5 E`, `Day 6 M`, `Day 6 E`,Week) "
                 + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
-        System.out.println("Executing query: " + sql + " with Id: " + employeeId);
+        //System.out.println("Executing query: " + sql + " with Id: " + employeeId);
 
         try (Connection conn = DataSource.openConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -107,6 +107,33 @@ public class ConstraintsDao {
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+        }
+    }
+    public Constraints getConstraintsByEmployeeIdAndWeek(String employeeId, int weekNum) {
+        String sql = "SELECT * FROM ConstraintsTable WHERE Id = ? AND Week = ?";
+
+        try (Connection conn = DataSource.openConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, employeeId);
+            pstmt.setInt(2, weekNum);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                int[][] constraintsMatrix = new int[2][7];
+
+                for (int day = 1; day <= 7; day++) {
+                    constraintsMatrix[0][day - 1] = rs.getInt("Day " + day + " M");
+                    constraintsMatrix[1][day - 1] = rs.getInt("Day " + day + " E");
+                }
+
+                return new Constraints(constraintsMatrix);
+            } else {
+                System.out.println("No constraints found for employee ID: " + employeeId + " and Week: " + weekNum);
+                return null;
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return null;
         }
     }
 

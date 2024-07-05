@@ -158,4 +158,41 @@ public class ScheduleDao {
             linkStatement.executeUpdate();
         }
     }
+    public int getWeekFlag() {
+        String sql = "SELECT week_flag FROM WeekFlag";
+        try (Connection conn = DataSource.openConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt("week_flag");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error retrieving week flag: " + e.getMessage());
+        }
+        return -1; // Indicate that the week flag does not exist
+    }
+
+    public void initializeWeekFlag(int weekFlag) {
+        String sql = "INSERT INTO WeekFlag (week_flag) VALUES (?)";
+        try (Connection conn = DataSource.openConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, weekFlag);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error initializing week flag: " + e.getMessage());
+        }
+    }
+
+    public void setWeekFlag(int weekFlag) {
+        String sql = "UPDATE WeekFlag SET week_flag = ? WHERE week_flag = ?";
+        try (Connection conn = DataSource.openConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, weekFlag);
+            pstmt.setInt(2, weekFlag); // Assuming there's only one row, this will update it
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error saving week flag: " + e.getMessage());
+        }
+    }
+
 }

@@ -147,13 +147,7 @@ public class ConstraintsController {
     public Map<String, Constraints> getAllConstraints() {
         return relevantConstraintsMap;
     }
-    public Constraints getMatrixFromID(String id) {
-        return constraintsMap.get(id);
-    }
 
-    public Constraints getMatrix(String id) {
-        return constraintsMap.get(id);
-    }
     public void stopSubmission(){
         this.submission = 1 ;
         System.out.println("Submissions have been stopped.");
@@ -170,22 +164,26 @@ public class ConstraintsController {
     public void printListEmpl() {
         System.out.println("\nThe Map Contains constraints: \n\n" + constraintsMap);
     }
-    public void printConstraintsForEmployee(String employeeId) {
-        Constraints constraints = constraintsMap.get(employeeId);
+    public void printConstraintsForEmployee(String employeeId, int weekNum) {
+        Constraints constraints = constraintDao.getConstraintsByEmployeeIdAndWeek(employeeId, weekNum);
         if (constraints != null) {
-            System.out.println("Constraints for employee ID: " + employeeId);
+            System.out.println("Constraints for employee ID: " + employeeId + " for week: " + weekNum);
             printMatrix(constraints.getMatrix());
         } else {
-            System.out.println("No constraints found for employee ID: " + employeeId);
+           // System.out.println("No constraints found for employee ID: " + employeeId + " for week: " + weekNum);
         }
     }
-
     public void printAllRelevantConstraints() {
         addRelevantConstraintFromDbToMap();
-        for (Map.Entry<String, Constraints> entry : relevantConstraintsMap.entrySet()) {
-            System.out.println("Employee ID: " + entry.getKey());
-            printMatrix(entry.getValue().getMatrix());
-            System.out.println();
+
+        if (relevantConstraintsMap.isEmpty()) {
+            System.out.println("No relevant constraints found.");
+        } else {
+            for (Map.Entry<String, Constraints> entry : relevantConstraintsMap.entrySet()) {
+                System.out.println("Employee ID: " + entry.getKey());
+                printMatrix(entry.getValue().getMatrix());
+                System.out.println();
+            }
         }
     }
     public void printMatrix(int[][] matrix) {

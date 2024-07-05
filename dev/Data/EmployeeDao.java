@@ -21,10 +21,10 @@ public class EmployeeDao {
     }
 
     //public static synchronized EmployeeDao getInstance() {
-     //   if (single_instance == null) {
-      //      single_instance = new EmployeeDao();
-        //}
-       // return single_instance;
+    //   if (single_instance == null) {
+    //      single_instance = new EmployeeDao();
+    //}
+    // return single_instance;
     //}
 
     public List<Employee> getAllEmp() {
@@ -50,7 +50,7 @@ public class EmployeeDao {
 
                 SuperMarket superMarket = SuperMarketDao.getInstance().getSuperMarketByAddress(superMarketAddress);
                 terms t = new terms(startdate, jobType, daysoff);
-                Employee employee = new Employee( fname, lname,id, salary, t, superMarket);
+                Employee employee = new Employee(fname, lname, id, salary, t, superMarket);
                 employee.setPassword(password);
                 employee.setRole(role);
 
@@ -105,17 +105,20 @@ public class EmployeeDao {
     public void registerEmployee(Employee employee) {
         try {
             conn = DataSource.openConnection();
-            String sql = "INSERT INTO Employee (ID, fname, lname, salary, Address, Manager_Name, Job, days_off, Role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO Employee (ID, fname, lname, salary,Job, Address, Manager_Name,Role, hire_date, days_off, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setString(1, employee.getId());
             statement.setString(2, employee.getFname());
             statement.setString(3, employee.getLname());
             statement.setInt(4, employee.getSalary());
-            statement.setDate(5, java.sql.Date.valueOf(employee.getTerms().getStartdate()));
-            statement.setString(6, employee.getTerms().getJobType());
-            statement.setString(7, employee.getTerms().getDaysoff());
-            statement.setInt(8, employee.getSuperMarketBranch().getId());
-            statement.setString(9, employee.getRole().name());
+            statement.setString(9, (employee.getTerms().getStartdate()));
+            statement.setString(5, employee.getTerms().getJobType());
+            statement.setString(8, employee.getRole().toString());
+            statement.setString(6, employee.getSuperMarketBranch().getAddress());
+            statement.setString(7, employee.getSuperMarketBranch().getManagerName());
+            statement.setString(11, employee.getPassword());
+            statement.setString(10, employee.getTerms().getDaysoff());
+
             statement.executeUpdate();
 
             EmployeeController.addEmployeeToSystem(employee);
@@ -125,4 +128,32 @@ public class EmployeeDao {
             DataSource.closeConnection();
         }
     }
-}
+
+    public void updateRole(String employeeId, Role newRole) throws SQLException {
+        Connection conn = DataSource.getConnection();
+        String sql = "UPDATE Employee SET role = ? WHERE id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, newRole.name());
+            stmt.setString(2, employeeId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new SQLException("Failed to update role in the database.", e);
+        } finally {
+            conn.close();
+        }
+    }
+    public void updateSuperMarket(String employeeId, SuperMarket s) throws SQLException {
+        Connection conn = DataSource.getConnection();
+        String sql = "UPDATE Employee SET Address = ? WHERE id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, s.getAddress());
+            stmt.setString(2, employeeId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new SQLException("Failed to update Supermarket in the database.", e);
+        } finally {
+            conn.close();
+        }
+    }
+    }
+

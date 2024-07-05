@@ -15,6 +15,11 @@ public class SuperMarketController {
         List<SuperMarket> newSuperMarkets = smd.getAllSuperMarkets();
         superMarkets = new ArrayList<>(newSuperMarkets);
     }
+    //Method to add one supermarket to the system
+    public static void addOneSuperMarketsToSystem(SuperMarket superMarket) {
+        List<SuperMarket> newSuperMarkets = smd.getAllSuperMarkets();
+        superMarkets.add(superMarket);
+    }
 
     // Method to get all supermarkets
     public static List<SuperMarket> getAllSuperMarkets() {

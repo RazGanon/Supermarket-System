@@ -15,13 +15,7 @@ public class ScheduleController {
     private final ConstraintsController constrainManagement;
 
     private EmployeeController employeeManagement;
-    private final String location;
-    private final LocalDate startDate;
-    private final LocalTime morningStart;
-    private final LocalTime morningEnd;
-    private final LocalTime eveningStart;
-    private final LocalTime eveningEnd;
-    private final SuperMarket superMarket;
+
     private int  weekFlag = 0;
 
     private final Map<Integer, ShiftRules> shiftRequirements = new HashMap<>();
@@ -32,16 +26,16 @@ public class ScheduleController {
     private final Map<Integer, StringBuilder> ScheduleBase = new HashMap<>();
 
 
-    public ScheduleController(String location, LocalDate startDate, LocalTime morningStart, LocalTime morningEnd, LocalTime eveningStart, LocalTime eveningEnd, SuperMarket superMarket, EmployeeController employeeManagement,ConstraintsController constraintManagement) {
-        this.location = location;
-        this.startDate = startDate;
-        this.morningStart = morningStart;
-        this.morningEnd = morningEnd;
-        this.eveningStart = eveningStart;
-        this.eveningEnd = eveningEnd;
-        this.superMarket = superMarket;
+    public ScheduleController( EmployeeController employeeManagement,ConstraintsController constraintManagement) {
+
         this.employeeManagement = employeeManagement;
         this.constrainManagement = constraintManagement;
+        this.weekFlag = scheduleDao.getWeekFlag();
+
+        if (this.weekFlag == -1) {
+            this.weekFlag = 1; // Default initial week flag
+            scheduleDao.initializeWeekFlag(this.weekFlag);
+        }
 
         // Initialize default shift requirements (0 employees and managers)
         for (int i = 0; i < 6; i++) {
@@ -56,10 +50,16 @@ public class ScheduleController {
         shiftRequirements.put(day, rules);
     }
     public int getWeekFlag() {
-        return this.weekFlag;
+        return weekFlag;
+    }
+
+    public void setWeekFlag(int weekFlag) {
+        this.weekFlag = weekFlag;
+        scheduleDao.setWeekFlag(weekFlag);
     }
     public void PlusWeekFlag() {
         weekFlag++;
+        setWeekFlag(weekFlag);
     }
 
     public String generateWeeklySchedule(Map<String, Constraints> constraints) {
@@ -77,7 +77,6 @@ public class ScheduleController {
         newestSchedule++;
         ScheduleBase.put(newestSchedule, schedule);
         // Create the Schedule object and save it to the database
-       //Schedule schedule1 = new Schedule(getWeekFlag(), location, shifts);
         scheduleDao.addSchedule(schedule, getWeekFlag());
         return schedule.toString();
     }
@@ -107,10 +106,6 @@ public class ScheduleController {
         return String.join(", ", assignedEmployeeNames);
 
     }
-    public List<Shift> getallShifts() {
-        return this.shifts;
-    }
-
 
 
         public String getCurrentSchedule() {

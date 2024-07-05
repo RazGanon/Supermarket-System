@@ -43,25 +43,6 @@ public class ShiftDao {
         return shifts;
     }
 
-    // Method to get shifts by day
-    public List<Shift> getShiftsByDay(String day) {
-        List<Shift> shifts = new ArrayList<>();
-        String query = "SELECT * FROM shift WHERE day = ?";
-        try (Connection conn = DataSource.openConnection();
-             PreparedStatement statement = conn.prepareStatement(query)) {
-            statement.setString(1, day);
-            ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                int shiftId = rs.getInt("shift_id");
-                String period = rs.getString("period");
-                Shift shift = new Shift( day, period,shiftId);
-                shifts.add(shift);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return shifts;
-    }
 
     // Method to add a new shift
     public void addShift(Shift shift) {
