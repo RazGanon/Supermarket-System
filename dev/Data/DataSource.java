@@ -35,14 +35,11 @@ public class DataSource {
             return null;
         }
     }
-    //dont delete this function -- all the restore functions is for self use.!!!
-    public static void restoreStartingData() {
+
+    public static void restoreSuperMarketStartingData() {
         try (Connection conn = getConnection(); Statement stmt = conn.createStatement()) {
 
-             //Employee initial data
-            restoreEmployeeData(stmt);
-
-             //SuperMarkets initial data
+            //SuperMarkets initial data
             restoreSuperMarketsData(stmt);
 
 
@@ -51,29 +48,27 @@ public class DataSource {
             e.printStackTrace();
         }
     }
+    public static void restoreSEmpStartingData() {
+        try (Connection conn = getConnection(); Statement stmt = conn.createStatement()) {
+
+            //Employee initial data
+            restoreEmployeeData(stmt);
+
+
+            System.out.println("Starting data has been restored.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     public static void cleanTables() {
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.println("Do you want to clean data before running? (yes/no)");
-        String cleanData = scanner.nextLine();
-
-        if (!cleanData.equalsIgnoreCase("yes")) {
-            return;
-        }
-
-        String[] tables = {"ConstraintsTable", "schedule", "schedule_shift_employee", "Employee","WeekFlag"};
+        String[] tables = {"ConstraintsTable", "schedule", "schedule_shift_employee", "Employee", "WeekFlag","SuperMarkets"};
         for (String table : tables) {
-            System.out.println("Do you want to clean " + table + " table? (yes/no)");
-            String response = scanner.nextLine();
-
-            if (response.equalsIgnoreCase("yes")) {
-                cleanTable(table);
-            }
+            cleanTable(table);
         }
-
     }
 
-    private static void cleanTable(String table) {
+
+    public static void cleanTable(String table) {
         try (Connection conn = getConnection(); Statement stmt = conn.createStatement()) {
             stmt.executeUpdate("DELETE FROM " + table);
             stmt.executeUpdate("DELETE FROM sqlite_sequence WHERE name='" + table + "'"); // Reset auto-increment fields
