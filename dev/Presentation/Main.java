@@ -39,7 +39,7 @@ public class Main {
         //SuperMarketController.addAllSuperMarketsToSystem();
         scheduleController.connectAllShiftsToSYS();
 
-        while (true) {
+        while (mainApp.isRunning) {
             System.out.println("Enter username: ");
             String username = scanner.nextLine();
             System.out.println("Enter password: ");
@@ -55,6 +55,7 @@ public class Main {
                 continue;
             }
 
+            mainApp.employeeToCheck = employeeToCheck;
             boolean isManager = mainApp.employeeManagement.isManager(employeeToCheck);
             if (isManager) {
                 mainApp.showMenuForManager(scanner);
@@ -62,6 +63,8 @@ public class Main {
                 mainApp.showMenuForEmployee(scanner);
             }
         }
+
+        System.out.println("System stopped running.");
     }
 
     private void initializeData() {
@@ -125,9 +128,11 @@ public class Main {
         LocalDate date = LocalDate.now();
         String sdate = date.toString();
         terms newTerms = new terms(sdate, jobType, dayOff);
+        System.out.println("Ask the employee what password they want: ");
+        String newEmpPassword = scanner.nextLine();
 
         // Assuming registerEmployeeManually takes these parameters
-        employeeManagement.registerEmployeeManually(firstName, lastName, id, salary, newTerms, chosenSuperMarket);
+        employeeManagement.registerEmployeeManually(firstName, lastName, id, salary, newTerms, chosenSuperMarket,newEmpPassword);
 
         System.out.println("Employee registered successfully.");
     }
@@ -210,32 +215,48 @@ public class Main {
         }
     }
 
-    private void generateSchedule() {
-        Scanner scanner = new Scanner(System.in);
+    private void generateSchedule(Scanner scanner) {
+        //Scanner scanner = new Scanner(System.in);
         constraintsController.setShiftRequirements(scanner);
         constraintsController.generateWeeklySchedule();
     }
 
-    private void checkEmployeeRole() {
-        Scanner scanner = new Scanner(System.in);
+    private void checkEmployeeRole(Scanner scanner) {
         System.out.print("Enter The employee ID That You Want To Check Is Role : ");
         String idChoice = scanner.nextLine();
         employeeManagement.getRoleEmployeeById(idChoice);
     }
 
     private void checkConstraints(Scanner scanner) {
-        System.out.print("Enter employee ID: ");
+        System.out.print("Enter employee ID (or type 'exit' to return to the menu): ");
         String idChoice = scanner.nextLine();
+        if (idChoice.equalsIgnoreCase("exit")) {
+            return;
+        }
+
         Employee e = employeeManagement.getEmployeeById(idChoice);
         if (e == null) {
             System.out.println("Employee not found. Please try again.");
             return;
         }
-        System.out.print("Enter Week Num (Start From 0): ");
-        int weekChoice = Integer.parseInt(scanner.nextLine());
 
-        constraintsController.printConstraintsForEmployee(idChoice, weekChoice);
+        while (true) {
+            System.out.print("Enter Week Num (Start From 0, or type 'exit' to return to the menu): ");
+            String weekChoiceStr = scanner.nextLine();
+            if (weekChoiceStr.equalsIgnoreCase("exit")) {
+                return;
+            }
+
+            try {
+                int weekChoice = Integer.parseInt(weekChoiceStr);
+                constraintsController.printConstraintsForEmployee(idChoice, weekChoice);
+                break; // Exit the loop after printing constraints
+            } catch (NumberFormatException e1) {
+                System.out.println("Invalid input. Please enter a valid week number or type 'exit' to return to the menu.");
+            }
+        }
     }
+
 
     private void PrintEmpPastConstraints(Scanner scanner, String id) {
         Employee e = employeeManagement.getEmployeeById(id);
@@ -250,16 +271,24 @@ public class Main {
     }
 
     private void checkRelevantConstraints(Scanner scanner) {
-        System.out.print("Enter employee ID: ");
-        String idChoice = scanner.nextLine();
-        Employee e = employeeManagement.getEmployeeById(idChoice);
-        if (e == null) {
-            System.out.println("Employee not found. Please try again.");
-            return;
+        while (true) {
+            System.out.print("Enter employee ID (or type 'exit' to return to the menu): ");
+            String idChoice = scanner.nextLine();
+            if (idChoice.equalsIgnoreCase("exit")) {
+                return;
+            }
+
+            Employee e = employeeManagement.getEmployeeById(idChoice);
+            if (e == null) {
+                System.out.println("Employee not found. Please try again.");
+            } else {
+                int weekChoice = scheduleController.getWeekFlag();
+                constraintsController.printConstraintsForEmployee(idChoice, weekChoice);
+                break; // Exit the loop after printing constraints
+            }
         }
-        int weekChoice = scheduleController.getWeekFlag();
-        constraintsController.printConstraintsForEmployee(idChoice, weekChoice);
     }
+
 
     private void showAllEmployeesInSuperMarket(Scanner scanner) {
         System.out.print("Enter the location of the supermarket: ");
@@ -279,9 +308,8 @@ public class Main {
         System.out.println("The Week Number is: " + scheduleController.getWeekFlag());
     }
 
-
     private void showMenuForManager(Scanner scanner) {
-        while (isRunning) {
+        while (true) {
             System.out.println("Hello Manager !!");
             System.out.println("Menu:");
             System.out.println("1. Watch The Current Schedule");
@@ -298,7 +326,8 @@ public class Main {
             System.out.println("12. Show me all The Employees Constraints");
             System.out.println("13. Show me all The SuperMarkets");
             System.out.println("14. What is the number of the week?");
-            System.out.println("15. Exit");
+            System.out.println("15. Log out");
+            System.out.println("16. Exit");
 
             System.out.print("Enter your choice: ");
             int choice = scanner.nextInt();
@@ -318,10 +347,10 @@ public class Main {
                     checkRelevantConstraints(scanner);
                     break;
                 case 5:
-                    generateSchedule();
+                    generateSchedule(scanner);
                     break;
                 case 6:
-                    checkEmployeeRole();
+                    checkEmployeeRole(scanner);
                     break;
                 case 7:
                     constraintsController.startSubmission();
@@ -349,9 +378,11 @@ public class Main {
                     System.out.println("When you Start new Session Of submission the week is grown by 1");
                     break;
                 case 15:
-                    System.out.println("logging out...");
+                    System.out.println("Logging out...");
+                    employeeToCheck = null;
+                    return;
                 case 16:
-                    isRunning =false;
+                    isRunning = false;
                     System.out.println("Exiting from system...");
                     return;
                 default:
@@ -361,7 +392,7 @@ public class Main {
     }
 
     private void showMenuForEmployee(Scanner scanner) {
-        while (isRunning) {
+        while (true) {
             System.out.println("Menu:");
             System.out.println("1. Make Your Constraint For The Next Schedule");
             System.out.println("2. Watch Current Schedule");
@@ -370,8 +401,8 @@ public class Main {
             System.out.println("5. What Is My Role ? ");
             System.out.println("6. View Past Schedules");
             System.out.println("7. What is the number of the week?");
-            System.out.println("11. log out ");
-            System.out.println("11. Exit");
+            System.out.println("8. Log out");
+            System.out.println("9. Exit");
 
             System.out.print("Enter your choice: ");
             int choice = scanner.nextInt();
@@ -396,12 +427,13 @@ public class Main {
                 case 7:
                     ShowWeekFlag();
                     break;
-                case 11:
-                    System.out.println("logging out ...");
+                case 8:
+                    System.out.println("Logging out...");
+                    employeeToCheck = null;
                     return;
-                case 12:
+                case 9:
                     System.out.println("Exiting from system...");
-                    isRunning=false;
+                    isRunning = false;
                     return;
                 default:
                     System.out.println("Invalid choice. Please try again.");

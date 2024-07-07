@@ -170,7 +170,7 @@ public class ConstraintsController {
             System.out.println("Constraints for employee ID: " + employeeId + " for week: " + weekNum);
             printMatrix(constraints.getMatrix());
         } else {
-           // System.out.println("No constraints found for employee ID: " + employeeId + " for week: " + weekNum);
+            System.out.println("No constraints found for employee ID: " + employeeId + " for week: " + weekNum);
         }
     }
     public void printAllRelevantConstraints() {

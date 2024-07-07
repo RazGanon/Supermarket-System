@@ -23,7 +23,7 @@ public class EmployeeController {
 
     // here i build two register employee function -- one of them is when the admin want to add employee manually and than he need to
     // ask the new employee what password he want , and the other is when i build employee automatically
-    public Employee registerEmployeeManually(String fName, String lName, String id, int salary, terms terms, SuperMarket superMarketBranch) {
+    public Employee registerEmployeeManually(String fName, String lName, String id, int salary, terms terms, SuperMarket superMarketBranch,String newEmpPassword) {
         if (id == null || fName == null || lName == null || terms == null) {
             System.out.println("Invalid input. All fields are required.");
             return null;
@@ -40,9 +40,9 @@ public class EmployeeController {
 
             //employeeMap.put(newEmployee.getId(), newEmployee);
             //employeeDao.registerEmployee(newEmployee); // add new emp to db
-            System.out.println("Ask the employee what password they want: ");
-            Scanner scanner = new Scanner(System.in);
-            String newEmpPassword = scanner.nextLine();
+           // System.out.println("Ask the employee what password they want: ");
+           // Scanner scanner = new Scanner(System.in);
+           //String newEmpPassword = scanner.nextLine();
             newEmployee.setPassword(newEmpPassword); // employee chose password and we added it to his info
             employeeDao.registerEmployee(newEmployee); // add new emp to db
             System.out.println("Employee registered successfully: " + newEmployee);
