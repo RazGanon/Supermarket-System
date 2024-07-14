@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="shon">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/Downloads/shon.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/Downloads/shon.jar!/dev" />
+    </SOURCES>
+  </library>
+</component>
