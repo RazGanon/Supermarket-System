@@ -19,5 +19,7 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="postgresql-42.7.3" level="project" />
+    <orderEntry type="library" name="sqlite-jdbc-3.46.0.0" level="project" />
+    <orderEntry type="library" name="shon" level="project" />
   </component>
 </module>

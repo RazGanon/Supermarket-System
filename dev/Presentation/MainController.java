@@ -173,6 +173,9 @@ public class MainController {
         if (driver.getLicenseType() == null || driver.getLicenseType().isEmpty()) {
             return "Error: License type is required.";
         }
+        if (driverController.getDriverById(driver.getId()) != null){
+            return "Error: Driver is type already exists.";
+        }
 
         driverController.addDriver(driver);
         return "Driver added successfully.";

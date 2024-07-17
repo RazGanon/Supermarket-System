@@ -18,7 +18,6 @@ public class DataSource {
             return null;
         }
     }
-
     public static void closeConnection() {
         try {
             if (conn != null && !conn.isClosed()) {
@@ -28,7 +27,6 @@ public class DataSource {
             e.printStackTrace();
         }
     }
-
     public static void resetDatabase() {
         conn = openConnection();
         try {
@@ -137,7 +135,7 @@ public class DataSource {
     }
 
 
-
+ 
 
     public static void insertInitialData() {
         conn = openConnection();

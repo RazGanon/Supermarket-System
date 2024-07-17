@@ -1,20 +1,23 @@
 package Presentation;
+
 import com.google.gson.Gson;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 import Domain.*;
-
+import DomainEmployees.*;
 public class Main {
     private static Gson gson = new Gson();
     private static MainController mainController;
-
+    private static EmployeeController employee_controller;
     public Main(){
         mainController = MainController.getInstance();
+        employee_controller = new EmployeeController();
     }
-
     public static void main(String[] args) {
         new Main();
         Scanner scanner = new Scanner(System.in);
+        employee_controller.addAllTAbleEmp();
         while (true) {
             showMenu();
             int choice = scanner.nextInt();
@@ -334,13 +337,47 @@ public class Main {
         String licenseType = scanner.nextLine();
         System.out.print("Enter Driver Name: ");
         String driverName = scanner.nextLine();
+        System.out.print("Enter Driver Last Name: ");
+        String driverLastName = scanner.nextLine();
+        System.out.print("Enter Driver ID: ");
+        int driverId = scanner.nextInt();
         System.out.print("Is Driver Currently Available (Please Enter - (true/false)) : ");
         String availabilityStr = scanner.nextLine();
         boolean availability = Boolean.parseBoolean(availabilityStr);
-        System.out.print("Enter Driver ID: ");
-        int driverId = scanner.nextInt();
-        scanner.nextLine(); // Consume new line
-        Driver newDriver = new Driver(licenseType, driverName, availability, driverId);
+        scanner.nextLine();//Consume new line
+        System.out.print("Enter employee salary: ");
+        int salary = Integer.parseInt(scanner.nextLine());
+        System.out.println("Ask the employee what password they want: ");
+        String newEmpPassword = scanner.nextLine();
+        String dayOff = "0"; // start with 0 days off
+        String jobType = "";
+        while (true) {
+            System.out.print("Choose job type:\n1. Full-Time Job\n2. Part-Time Job\nEnter your choice: ");
+            int jobTypeChoice = Integer.parseInt(scanner.nextLine());
+            if (jobTypeChoice == 1) {
+                jobType = "Full-Time Job";
+                break;
+            } else if (jobTypeChoice == 2) {
+                jobType = "Part-Time Job";
+                break;
+            } else {
+                System.out.println("Invalid choice. Please try again.");
+            }
+        }
+        LocalDate date = LocalDate.now();
+        String sdate = date.toString();
+        terms newTerms = new terms(sdate, jobType, dayOff);
+        SuperMarket superMarket = new SuperMarket("Driver's Site","shon");
+        Employee e = employee_controller.registerEmployeeManually(driverName,driverLastName,Integer.toString(driverId),salary,newTerms,superMarket,newEmpPassword);
+        if (e != null){
+            employee_controller.changeEmpRole(e,Role.Driver);
+        }
+        else{
+           Employee employee = EmployeeController.getEmployeeById(Integer.toString(driverId)) ;
+           employee_controller.changeEmpRole(employee,Role.Driver);
+        }
+
+        Driver newDriver = new Driver(licenseType, driverName + " " + driverLastName, availability, driverId);
         String json = gson.toJson(newDriver);
         String result = mainController.addDriver(json);
         System.out.println(result);
@@ -350,7 +387,11 @@ public class Main {
         System.out.print("Enter Driver ID To Remove: ");
         int driverId = scanner.nextInt();
         scanner.nextLine(); // Consume new line
+        String d_Id = Integer.toString(driverId);
+        EmployeeController.deleteEmployee(d_Id);
         mainController.removeDriver(driverId);
+
+
     }
 
     public static void updateDriverAvailability(Scanner scanner) {

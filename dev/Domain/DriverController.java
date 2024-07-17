@@ -7,6 +7,7 @@ public class DriverController {
     private DriverDAO driverDAO;
 
 
+
     public DriverController() {
        driverDAO = DriverDAO.getInstance();
 
@@ -18,6 +19,7 @@ public class DriverController {
 
     public void addDriver(Driver driver) {
         driverDAO.addDriver(driver);
+
     }
 
     public boolean removeDriver(Driver driver) {
